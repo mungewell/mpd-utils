@@ -109,6 +109,8 @@ def main():
         action="store_true", dest="dump")
     parser.add_option("-p", "--preset", dest="preset",
         help="change the profile number to PRESET" )
+    parser.add_option("-t", "--tempo", dest="tempo",
+        help="change the tempo to TEMPO" )
 
     (options, args) = parser.parse_args()
 
@@ -131,6 +133,8 @@ def main():
     # Change stuff here...
     if options.preset:
         config[0]['preset'] = int(options.preset)
+    if options.tempo:
+        config[0]['tempo'] = int(options.tempo)
 
 
 
