@@ -107,6 +107,7 @@ def main():
     parser.add_option("-d", "--dump",
         help="dump configuration to text",
         action="store_true", dest="dump")
+
     parser.add_option("-p", "--preset", dest="preset",
         help="change the profile number to PRESET" )
     parser.add_option("-t", "--tempo", dest="tempo",
@@ -114,19 +115,23 @@ def main():
 
     (options, args) = parser.parse_args()
 
-    if len(args) != 1:
+    if len(args) != 1 and not options.outfile:
         parser.error("input FILE not specified")
 
     if options.verbose:
         print("reading %s..." % args[0])
 
-    infile = open(args[0], "rb")
+    if len(args) != 1:
+        infile = open(options.outfile, "rb")
+    else:
+        infile = open(args[0], "rb")
     if not infile:
         print("Unable to open file")
         quit(0)
 
     data = infile.read(2000)
     config = Mpd218.parse(data)
+    infile.close()
 
 
 
