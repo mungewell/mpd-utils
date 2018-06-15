@@ -8,6 +8,19 @@ from optparse import OptionParser
 from construct import *
 
 #--------------------------------------------------
+# For interactive menus (optional)
+# https://github.com/jeffrimko/Qprompt
+
+try:
+   import qprompt
+   _hasQPrompt = True
+except ImportError:
+   _hasQPrompt = False
+'''
+_hasQPrompt = False
+'''
+
+#--------------------------------------------------
 # Define file format using Construct (v2.9)
 # https://github.com/construct/construct
 
@@ -97,7 +110,101 @@ Mpd218 = Sequence(
 
 #--------------------------------------------------
 
+config = None
+
+def edit_division():
+    global config
+
+    menu = qprompt.Menu()
+    for x,y in Header.division.subcon.ksymapping.items():
+        menu.add(str(x),y)
+    config[0]['division'] = int(menu.show())
+
+def edit_swing():
+    global config
+
+    menu = qprompt.Menu()
+    for x,y in Header.swing.subcon.ksymapping.items():
+        menu.add(str(x),y)
+    config[0]['swing'] = int(menu.show())
+
+def edit_dial(dial):
+    global config
+
+    bank = int((dial-1) / 6)
+    subdial = dial-(6*bank)-1
+    print("Editing Dial %d (Bank %s-%d):" %
+        (dial, chr(65+bank), subdial+1))
+
+    menu = qprompt.Menu()
+    for x,y in Dial.type.subcon.ksymapping.items():
+        menu.add(str(x),y)
+    ptype = menu.show()
+    config[2][bank][subdial]['type'] = int(ptype)
+
+    config[2][bank][subdial]['channel'] = \
+        qprompt.ask_int("Enter the 'Channel'", vld=range(1,17))
+
+    if ptype == '0' or ptype == '2':
+        config[2][bank][subdial]['midicc'] = \
+            qprompt.ask_int("Enter the 'MidiCC'", vld=range(0,128))
+
+    if ptype == '0' or ptype == '1':
+        config[2][bank][subdial]['min'] = \
+            qprompt.ask_int("Enter the 'Min'", vld=range(0,128))
+        config[2][bank][subdial]['max'] = \
+            qprompt.ask_int("Enter the 'Max'", vld=range(0,128))
+
+    if ptype == '3':
+        config[2][bank][subdial]['msb'] = \
+            qprompt.ask_int("Enter the 'MSB'", vld=range(0,128))
+        config[2][bank][subdial]['lsb'] = \
+            qprompt.ask_int("Enter the 'LSB'", vld=range(0,128))
+        config[2][bank][subdial]['value'] = \
+            qprompt.ask_int("Enter the 'Value'", vld=range(0,128))
+
+def edit_pad(pad):
+    global config
+
+    bank = int((pad-1) / 16)
+    subpad = pad-(16*bank)-1
+    print("Editing Pad %d (Bank %s-%d):" %
+        (pad, chr(65+bank), subpad+1))
+
+    menu = qprompt.Menu()
+    for x,y in Pad.type.subcon.ksymapping.items():
+        menu.add(str(x),y)
+    ptype = menu.show()
+    config[1][bank][subpad]['type'] = int(ptype)
+
+    config[1][bank][subpad]['channel'] = \
+        qprompt.ask_int("Enter the 'Channel'", vld=range(1,17))
+
+    if ptype == '0':
+        config[1][bank][subpad]['note'] = \
+            qprompt.ask_int("Enter the 'Note'", vld=range(0,128))
+
+        menu = qprompt.Menu()
+        for x,y in Pad.trigger.subcon.ksymapping.items():
+            menu.add(str(x),y)
+        config[1][bank][subpad]['trigger'] = int(menu.show())
+
+        menu = qprompt.Menu()
+        for x,y in Pad.aftertouch.subcon.ksymapping.items():
+            menu.add(str(x),y)
+        aftertouch = menu.show()
+    elif ptype == '1':
+        config[1][bank][subpad]['program'] = \
+            qprompt.ask_int("Enter the 'Program'", vld=range(0,128))
+    else:
+        config[1][bank][subpad]['msb'] = \
+            qprompt.ask_int("Enter the 'MSB'", vld=range(0,128))
+        config[1][bank][subpad]['lsb'] = \
+            qprompt.ask_int("Enter the 'LSB'", vld=range(0,128))
+
 def main():
+    global config
+
     usage = "usage: %prog [options] FILENAME"
     parser = OptionParser(usage)
     parser.add_option("-o", "--output", dest="outfile",
@@ -112,6 +219,20 @@ def main():
         help="change the profile number to PRESET" )
     parser.add_option("-t", "--tempo", dest="tempo",
         help="change the tempo to TEMPO" )
+    parser.add_option("-n", "--name", dest="name",
+        help="change the profile name to NAME")
+
+    if _hasQPrompt:
+        parser.add_option("-X", "--division",
+            help="Interactively change the Division",
+            action="store_true", dest="division")
+        parser.add_option("-S", "--swing",
+            help="Interactively change the Swing",
+            action="store_true", dest="swing")
+        parser.add_option("-D", "--dial", dest="dial",
+            help="Interactively configure a Dial")
+        parser.add_option("-P", "--pad", dest="pad",
+            help="Interactively configure a Pad" )
 
     (options, args) = parser.parse_args()
 
@@ -140,7 +261,17 @@ def main():
         config[0]['preset'] = int(options.preset)
     if options.tempo:
         config[0]['tempo'] = int(options.tempo)
+    if options.name:
+        config[0]['name'] = options.name[:8]
 
+    if options.division:
+        edit_division()
+    if options.swing:
+        edit_swing()
+    if options.dial:
+        edit_dial(int(options.dial))
+    if options.pad:
+        edit_pad(int(options.pad))
 
 
     if options.dump:
