@@ -1,0 +1,610 @@
+ListContainer: 
+    Container: 
+        preset = 1
+        name = u'example1' (total 8)
+        tempo = 60
+        division = (enum) DIV_1_16 4
+        swing = (enum) SWING_OFF 50
+    ListContainer: 
+        ListContainer: 
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 36
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 37
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 38
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 39
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 40
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 41
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 42
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 43
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 44
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 45
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 46
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 47
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 48
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 49
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 50
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 51
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+        ListContainer: 
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 52
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 53
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 54
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 55
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 56
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 57
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 58
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 59
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 60
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 61
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 62
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 63
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 64
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 65
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 66
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 67
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+        ListContainer: 
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 68
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 69
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 70
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 71
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 72
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 73
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 74
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 75
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 76
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 77
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 78
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 79
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 80
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 81
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 82
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+            Container: 
+                type = (enum) NOTE 0
+                channel = 10
+                note = 83
+                trigger = (enum) MOMENTARY 0
+                aftertouch = (enum) CHANNEL 1
+                program = 0
+                msb = 0
+                lsb = 0
+    ListContainer: 
+        ListContainer: 
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 3
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 1
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 9
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 2
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 12
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 3
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 13
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 4
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 14
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 5
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 15
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 6
+        ListContainer: 
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 16
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 7
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 17
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 8
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 18
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 9
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 19
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 10
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 20
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 11
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 21
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 12
+        ListContainer: 
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 22
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 13
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 23
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 14
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 24
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 15
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 25
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 16
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 26
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 17
+            Container: 
+                type = (enum) CC 0
+                channel = 1
+                midicc = 27
+                min = 0
+                max = 127
+                msb = 0
+                lsb = 0
+                value = 18
+    Container: 
