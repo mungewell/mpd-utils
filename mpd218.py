@@ -119,7 +119,10 @@ def main():
         parser.error("input FILE not specified")
 
     if options.verbose:
-        print("reading %s..." % args[0])
+        if len(args) == 1:
+            print("reading %s..." % args[0])
+        else:
+            print("reading %s..." % options.outfile)
 
     if len(args) != 1:
         infile = open(options.outfile, "rb")
