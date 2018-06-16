@@ -265,7 +265,7 @@ def main():
     if options.tempo:
         config[0]['tempo'] = int(options.tempo)
     if options.name:
-        config[0]['name'] = options.name[:8]
+        config[0]['name'] = (options.name + (" "*8))[:8]
 
     if options.division:
         edit_division()
