@@ -213,8 +213,9 @@ def edit_pad(pad):
         for x,y in Pad.aftertouch.subcon.ksymapping.items():
             menu.add(str(x),y)
             if config[1][bank][subpad]['aftertouch'] == y:
-                dft = str(x)
-        config[1][bank][subpad]['aftertouch'] = int(menu.show(msg="Aftertouch", dft=dft))
+                #dft = str(x)
+                dft = "currently %s" % str(x)
+        config[1][bank][subpad]['aftertouch'] = int(menu.show(msg="Aftertouch", note=dft))
     elif ptype == '1':
         config[1][bank][subpad]['program'] = \
             qprompt.ask_int("Program", vld=list(range(0,128)),
