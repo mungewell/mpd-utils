@@ -118,7 +118,9 @@ def edit_division():
     menu = qprompt.Menu()
     for x,y in Header.division.subcon.ksymapping.items():
         menu.add(str(x),y)
-    config[0]['division'] = int(menu.show())
+        if config[0]['division'] == y:
+            dft = str(x)
+    config[0]['division'] = int(menu.show(msg="Division", dft=dft))
 
 def edit_swing():
     global config
@@ -126,81 +128,104 @@ def edit_swing():
     menu = qprompt.Menu()
     for x,y in Header.swing.subcon.ksymapping.items():
         menu.add(str(x),y)
-    config[0]['swing'] = int(menu.show())
+        if config[0]['swing'] == y:
+            dft = str(x)
+    config[0]['swing'] = int(menu.show(msg="Swing", dft=dft))
 
 def edit_dial(dial):
     global config
 
     bank = int((dial-1) / 6)
     subdial = dial-(6*bank)-1
-    print("Editing Dial %d (Bank %s-%d):" %
-        (dial, chr(65+bank), subdial+1))
 
     menu = qprompt.Menu()
     for x,y in Dial.type.subcon.ksymapping.items():
         menu.add(str(x),y)
-    ptype = menu.show()
+        if config[2][bank][subdial]['type'] == y:
+            #dft = str(x)
+            dft = "currently %s" % str(x)
+    ptype = menu.show(hdr="Dial %d (Bank %s-%d):" % (dial, chr(65+bank), subdial+1),
+        msg="Type", note=dft)
     config[2][bank][subdial]['type'] = int(ptype)
 
     config[2][bank][subdial]['channel'] = \
-        qprompt.ask_int("Enter the 'Channel'", vld=range(1,17))
+        qprompt.ask_int("Channel", vld=list(range(0,17)),
+            dft=config[2][bank][subdial]['channel'])
 
     if ptype == '0' or ptype == '2':
         config[2][bank][subdial]['midicc'] = \
-            qprompt.ask_int("Enter the 'MidiCC'", vld=range(0,128))
+            qprompt.ask_int("MidiCC", vld=list(range(0,128)),
+                dft=config[2][bank][subdial]['midicc'])
 
     if ptype == '0' or ptype == '1':
         config[2][bank][subdial]['min'] = \
-            qprompt.ask_int("Enter the 'Min'", vld=range(0,128))
+            qprompt.ask_int("Min", vld=list(range(0,128)),
+                dft=config[2][bank][subdial]['min'])
         config[2][bank][subdial]['max'] = \
-            qprompt.ask_int("Enter the 'Max'", vld=range(0,128))
+            qprompt.ask_int("Max", vld=list(range(0,128)),
+                dft=config[2][bank][subdial]['max'])
 
     if ptype == '3':
         config[2][bank][subdial]['msb'] = \
-            qprompt.ask_int("Enter the 'MSB'", vld=range(0,128))
+            qprompt.ask_int("MSB", vld=list(range(0,128)),
+                dft=config[2][bank][subdial]['msb'])
         config[2][bank][subdial]['lsb'] = \
-            qprompt.ask_int("Enter the 'LSB'", vld=range(0,128))
+            qprompt.ask_int("LSB", vld=list(range(0,128)),
+                dft=config[2][bank][subdial]['lsb'])
         config[2][bank][subdial]['value'] = \
-            qprompt.ask_int("Enter the 'Value'", vld=range(0,128))
+            qprompt.ask_int("Value", vld=list(range(0,128)),
+                dft=config[2][bank][subdial]['value'])
 
 def edit_pad(pad):
     global config
 
     bank = int((pad-1) / 16)
     subpad = pad-(16*bank)-1
-    print("Editing Pad %d (Bank %s-%d):" %
-        (pad, chr(65+bank), subpad+1))
 
     menu = qprompt.Menu()
     for x,y in Pad.type.subcon.ksymapping.items():
         menu.add(str(x),y)
-    ptype = menu.show()
+        if config[1][bank][subpad]['type'] == y:
+            #dft = str(x)
+            dft = "currently %s" % str(x)
+    ptype = menu.show(hdr="Pad %d (Bank %s-%d):" % (pad, chr(65+bank), subpad+1),
+        msg="Type", note=dft)
     config[1][bank][subpad]['type'] = int(ptype)
 
     config[1][bank][subpad]['channel'] = \
-        qprompt.ask_int("Enter the 'Channel'", vld=range(1,17))
+        qprompt.ask_int("Channel", vld=list(range(1,17)),
+            dft=config[1][bank][subpad]['channel'])
 
     if ptype == '0':
         config[1][bank][subpad]['note'] = \
-            qprompt.ask_int("Enter the 'Note'", vld=range(0,128))
+            qprompt.ask_int("Note", vld=list(range(0,128)),
+                dft=config[1][bank][subpad]['note'])
 
         menu = qprompt.Menu()
         for x,y in Pad.trigger.subcon.ksymapping.items():
             menu.add(str(x),y)
-        config[1][bank][subpad]['trigger'] = int(menu.show())
+            if config[1][bank][subpad]['trigger'] == y:
+                #dft = str(x)
+                dft = "currently %s" % str(x)
+        config[1][bank][subpad]['trigger'] = int(menu.show(msg="Trigger", note=dft))
 
         menu = qprompt.Menu()
         for x,y in Pad.aftertouch.subcon.ksymapping.items():
             menu.add(str(x),y)
-        aftertouch = menu.show()
+            if config[1][bank][subpad]['aftertouch'] == y:
+                dft = str(x)
+        config[1][bank][subpad]['aftertouch'] = int(menu.show(msg="Aftertouch", dft=dft))
     elif ptype == '1':
         config[1][bank][subpad]['program'] = \
-            qprompt.ask_int("Enter the 'Program'", vld=range(0,128))
+            qprompt.ask_int("Program", vld=list(range(0,128)),
+                dft=config[1][bank][subpad]['note'])
     else:
         config[1][bank][subpad]['msb'] = \
-            qprompt.ask_int("Enter the 'MSB'", vld=range(0,128))
+            qprompt.ask_int("MSB", vld=list(range(0,128)),
+                dft=config[1][bank][subpad]['msb'])
         config[1][bank][subpad]['lsb'] = \
-            qprompt.ask_int("Enter the 'LSB'", vld=range(0,128))
+            qprompt.ask_int("LSB", vld=list(range(0,128)),
+                dft=config[1][bank][subpad]['lsb'])
 
 def main():
     global config
