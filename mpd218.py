@@ -21,6 +21,19 @@ _hasQPrompt = False
 '''
 
 #--------------------------------------------------
+# For programming scales (optional)
+# https://github.com/charlottepierce/music_essentials
+
+try:
+   from music_essentials import Note,Scale
+   _hasME = True
+except ImportError:
+   _hasME = False
+'''
+_hasME = False
+'''
+
+#--------------------------------------------------
 # Define file format using Construct (v2.9)
 # https://github.com/construct/construct
 
@@ -228,6 +241,50 @@ def edit_pad(pad):
             qprompt.ask_int("LSB", vld=list(range(0,128)),
                 dft=config[1][bank][subpad]['lsb'])
 
+def edit_scale(pad, verbose):
+    global config
+
+    bank = int((pad-1) / 16)
+    subpad = pad-(16*bank)-1
+
+    menu = qprompt.Menu()
+    x = 0
+    for y in Scale._SCALE_PATTERNS:
+        menu.add(str(x),y)
+        x = x + 1
+    stype = menu.show(hdr="Pad %d (Bank %s-%d):" % (pad, chr(65+bank), subpad+1),
+        msg="Scale", returns="desc")
+    
+    root = qprompt.ask_int("Note", vld=list(range(0,128)),
+        dft=config[1][bank][subpad]['note'])
+
+    count = qprompt.ask_int("Count", vld=[0]+list(range(1,50-pad)), dft=0)
+
+    scale = Scale.build_scale(Note.from_midi_num(root), stype)
+    scale_lst = []
+    for note in scale:
+        scale_lst.append(note.midi_note_number())
+
+    if count:
+        while len(scale_lst) < count:
+            root = scale_lst.pop()
+            scale = Scale.build_scale(Note.from_midi_num(root), stype)
+            for note in scale:
+                scale_lst.append(note.midi_note_number())
+    else:
+        count = len(scale_lst)
+        if pad + count > 48:
+            count = 49 - pad
+
+    for note in scale_lst[:count]:
+        bank = int((pad-1) / 16)
+        subpad = pad-(16*bank)-1
+        config[1][bank][subpad]['note'] = note
+        if verbose:
+            print("Setting Pad %d (Bank %s-%d) to %d (%s)" %
+            (pad, chr(65+bank), subpad+1, note, Note.from_midi_num(note)))
+        pad = pad + 1
+
 def main():
     global config
 
@@ -259,6 +316,10 @@ def main():
             help="Interactively configure a Dial")
         parser.add_option("-P", "--pad", dest="pad",
             help="Interactively configure a Pad" )
+
+        if _hasME:
+            parser.add_option("-M", "--scale", dest="scale",
+                help="Interactively configure multiple Pads as a scale" )
 
     (options, args) = parser.parse_args()
 
@@ -301,6 +362,9 @@ def main():
         edit_dial(int(options.dial))
     if options.pad:
         edit_pad(int(options.pad))
+
+    if options.scale:
+        edit_scale(int(options.scale), options.verbose)
 
 
     if options.dump:
