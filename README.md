@@ -45,3 +45,59 @@ IO  hw:1,0,0  MPD218 MIDI 1
 
 $ amidi -p hw:1,0,0 -s example.mpd218
 ```
+
+Optionally the settings for Pads/Dials can be interactively editted.
+Requires:
+https://github.com/jeffrimko/Qprompt
+
+Example:
+```
+$ python3 mpd218.py -P 1 example.mpd218
+-- MENU: Pad 1 (Bank A-1): --
+  (0) NOTE
+  (1) PROG
+  (2) BANK
+[!] currently 0
+[?] Type: 0
+[?] Channel [10]: 
+[?] Note [36]: 
+-- MENU --
+  (0) MOMENTARY
+  (1) TOGGLE
+[!] currently 0
+[?] Trigger: 0
+-- MENU --
+  (0) OFF
+  (1) CHANNEL
+  (2) POLY
+[!] currently 1
+[?] Aftertouch: 1
+```
+
+Optionally multiple Pads can be programmed as a scale.
+Requires:
+https://github.com/charlottepierce/music_essentials
+
+Example:
+```
+$ python3 mpd218.py -M 1 example.mpd218 -v
+reading example.mpd218...
+-- MENU: Pad 1 (Bank A-1): --
+  (0) major
+  (1) maj
+  (2) minor
+  (3) min
+  (4) natural minor
+  (5) nat min
+[?] Scale: 0
+[?] Note [36]: 
+[?] Count [0]: 
+Setting Pad 1 (Bank A-1) to 36 (C2)
+Setting Pad 2 (Bank A-2) to 38 (D2)
+Setting Pad 3 (Bank A-3) to 40 (E2)
+Setting Pad 4 (Bank A-4) to 41 (F2)
+Setting Pad 5 (Bank A-5) to 43 (G2)
+Setting Pad 6 (Bank A-6) to 45 (A2)
+Setting Pad 7 (Bank A-7) to 47 (B2)
+Setting Pad 8 (Bank A-8) to 48 (C3)
+```
