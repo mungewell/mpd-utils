@@ -155,10 +155,9 @@ def edit_dial(dial):
     for x,y in Dial.type.subcon.ksymapping.items():
         menu.add(str(x),y)
         if config[2][bank][subdial]['type'] == y:
-            #dft = str(x)
-            dft = "currently %s" % str(x)
+            dft = str(x)
     ptype = menu.show(hdr="Dial %d (Bank %s-%d):" % (dial, chr(65+bank), subdial+1),
-        msg="Type", note=dft)
+        msg="Type", dft=dft)
     config[2][bank][subdial]['type'] = int(ptype)
 
     config[2][bank][subdial]['channel'] = \
@@ -199,10 +198,9 @@ def edit_pad(pad):
     for x,y in Pad.type.subcon.ksymapping.items():
         menu.add(str(x),y)
         if config[1][bank][subpad]['type'] == y:
-            #dft = str(x)
-            dft = "currently %s" % str(x)
+            dft = str(x)
     ptype = menu.show(hdr="Pad %d (Bank %s-%d):" % (pad, chr(65+bank), subpad+1),
-        msg="Type", note=dft)
+        msg="Type", dft=dft)
     config[1][bank][subpad]['type'] = int(ptype)
 
     config[1][bank][subpad]['channel'] = \
@@ -218,17 +216,15 @@ def edit_pad(pad):
         for x,y in Pad.trigger.subcon.ksymapping.items():
             menu.add(str(x),y)
             if config[1][bank][subpad]['trigger'] == y:
-                #dft = str(x)
-                dft = "currently %s" % str(x)
-        config[1][bank][subpad]['trigger'] = int(menu.show(msg="Trigger", note=dft))
+                dft = str(x)
+        config[1][bank][subpad]['trigger'] = int(menu.show(msg="Trigger", dft=dft))
 
         menu = qprompt.Menu()
         for x,y in Pad.aftertouch.subcon.ksymapping.items():
             menu.add(str(x),y)
             if config[1][bank][subpad]['aftertouch'] == y:
-                #dft = str(x)
-                dft = "currently %s" % str(x)
-        config[1][bank][subpad]['aftertouch'] = int(menu.show(msg="Aftertouch", note=dft))
+                dft = str(x)
+        config[1][bank][subpad]['aftertouch'] = int(menu.show(msg="Aftertouch", dft=dft))
     elif ptype == '1':
         config[1][bank][subpad]['program'] = \
             qprompt.ask_int("Program", vld=list(range(0,128)),

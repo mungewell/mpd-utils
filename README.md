@@ -33,6 +33,8 @@ Options:
   -S, --swing           Interactively change the Swing
   -D DIAL, --dial=DIAL  Interactively configure a Dial
   -P PAD, --pad=PAD     Interactively configure a Pad
+  -M SCALE, --scale=SCALE
+                        Interactively configure multiple Pads as a scale
 ```
 
 The configuration file is actually a SysEx 'code plug' and can be
@@ -52,26 +54,23 @@ https://github.com/jeffrimko/Qprompt
 
 Example:
 ```
-$ python3 mpd218.py -P 1 example.mpd218
+$ python3 mpd218.py -P 1 -o example.mpd218 
 -- MENU: Pad 1 (Bank A-1): --
   (0) NOTE
   (1) PROG
   (2) BANK
-[!] currently 0
-[?] Type: 0
+[?] Type [0]: 
 [?] Channel [10]: 
 [?] Note [36]: 
 -- MENU --
   (0) MOMENTARY
   (1) TOGGLE
-[!] currently 0
-[?] Trigger: 0
+[?] Trigger [0]: 
 -- MENU --
   (0) OFF
   (1) CHANNEL
   (2) POLY
-[!] currently 1
-[?] Aftertouch: 1
+[?] Aftertouch [1]: 
 ```
 
 Optionally multiple Pads can be programmed as a scale.
@@ -80,7 +79,7 @@ https://github.com/charlottepierce/music_essentials
 
 Example:
 ```
-$ python3 mpd218.py -M 1 example.mpd218 -v
+$ python3 mpd218.py -M 1 -o example.mpd218 -v
 reading example.mpd218...
 -- MENU: Pad 1 (Bank A-1): --
   (0) major
