@@ -350,19 +350,13 @@ def main():
 
     (options, args) = parser.parse_args()
 
-    if len(args) != 1 and not options.outfile:
+    if len(args) != 1:
         parser.error("input FILE not specified")
 
     if options.verbose:
-        if len(args) == 1:
-            print("reading %s..." % args[0])
-        else:
-            print("reading %s..." % options.outfile)
+        print("Reading %s..." % args[0])
 
-    if len(args) != 1:
-        infile = open(options.outfile, "rb")
-    else:
-        infile = open(args[0], "rb")
+    infile = open(args[0], "rb")
     if not infile:
         print("Unable to open file")
         quit(0)
@@ -397,14 +391,21 @@ def main():
     if options.dump:
         print(config)
 
-    if options.outfile:
-        if options.verbose:
+    if options.verbose:
+        if options.outfile:
             print("writing %s..." % options.outfile)
-        outfile = open(options.outfile, "wb")
-        if not outfile:
-            print("Unable to open output file")
         else:
-            outfile.write(Mpd218.build(config))
+            print("writing %s..." % args[0])
+
+    if options.outfile:
+        outfile = open(options.outfile, "wb")
+    else:
+        outfile = open(args[0], "wb")
+
+    if not outfile:
+        print("Unable to open output file")
+    else:
+        outfile.write(Mpd218.build(config))
 
 if __name__ == "__main__":
     main()

@@ -79,8 +79,8 @@ https://github.com/charlottepierce/music_essentials
 
 Example:
 ```
-$ python3 mpd218.py -M 1 -o example.mpd218 -v
-reading example.mpd218...
+$ python3 mpd218.py -v -M 1 -o scale.mpd218 example.mpd218
+Reading example.mpd218...
 -- MENU: Pad 1 (Bank A-1): --
   (0) major
   (1) maj
@@ -88,9 +88,19 @@ reading example.mpd218...
   (3) min
   (4) natural minor
   (5) nat min
+  (6) melodic minor
+  (7) dorian
+  (8) locrian
+  (9) lydian
+  (10) mixolydian
+  (11) phrygian
+  (12) major pentatonic
+  (13) minor pentatonic
+  (14) chromatic
 [?] Scale: 0
 [?] Note [36]: 
 [?] Count [0]: 
+[?] Config all as per Pad 1? [n]: y
 Setting Pad 1 (Bank A-1) to 36 (C2)
 Setting Pad 2 (Bank A-2) to 38 (D2)
 Setting Pad 3 (Bank A-3) to 40 (E2)
@@ -99,4 +109,5 @@ Setting Pad 5 (Bank A-5) to 43 (G2)
 Setting Pad 6 (Bank A-6) to 45 (A2)
 Setting Pad 7 (Bank A-7) to 47 (B2)
 Setting Pad 8 (Bank A-8) to 48 (C3)
+writing scale.mpd218...
 ```
