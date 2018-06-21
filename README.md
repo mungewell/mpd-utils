@@ -14,6 +14,7 @@ configuration files from Akai's MPD218 Editor (Windows application).
 
 The file is a propriatory format and specific to the MPD218. It may
 be possible to adjust/tailor the script for other Akai devices.
+
 ```
 $ python3 mpd218.py -h
 Usage: mpd218.py [options] FILENAME
@@ -37,9 +38,15 @@ Options:
                         Interactively configure multiple Pads as a scale
 ```
 
+## Uploading to the device
+
 The configuration file is actually a SysEx 'code plug' and can be
 uploaded (on Linux) with the ALSA tools. The configuration will
-be loaded into it's specified preset (as configured above)
+be loaded into it's specified preset ('-p PRESET' as configured above).
+
+If the preset is current one, changes to configurations are imediately
+active on the device. A little oddly current dial values persist between
+preset changes (even if they are now being directed somewhere else).
 ```
 $ amidi -l
 Dir Device    Name
@@ -54,7 +61,7 @@ https://github.com/jeffrimko/Qprompt
 
 Example:
 ```
-$ python3 mpd218.py -P 1 -o example.mpd218 
+$ python3 mpd218.py -P 1 example.mpd218 
 -- MENU: Pad 1 (Bank A-1): --
   (0) NOTE
   (1) PROG
@@ -111,3 +118,14 @@ Setting Pad 7 (Bank A-7) to 47 (B2)
 Setting Pad 8 (Bank A-8) to 48 (C3)
 writing scale.mpd218...
 ```
+
+
+## Other Devices
+
+It looks like several other Akai devices follow similar schemes, in
+particular the MPD226, MPK-Mini and MPK2. Raise a bug if you'de like
+to see a similar script for your device...
+
+https://github.com/gljubojevic/akai-mpk-mini-editor
+https://github.com/nsmith-/mpk2
+
