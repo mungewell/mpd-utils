@@ -34,22 +34,33 @@ _hasME = False
 '''
 
 #--------------------------------------------------
+# Constants defining MP218 features
+
+_PADS = 16
+_PBANKS = 3
+_PTOTAL = _PADS * _PBANKS
+
+_DIALS = 6
+_DBANKS = 3
+_DTOTAL = _DIALS * _DBANKS
+
+#--------------------------------------------------
 # Define file format using Construct (v2.9)
 # https://github.com/construct/construct
 
 Header = Struct(
     Const(b"\xf0"),                 # SysEx Begin
-    Const(b"\x47\x00\x34"),         # Mfg ID
-    Const(b"\x10"),
-    Const(b"\x04\x1d"),
+    Const(b"\x47\x00"),             # Mfg ID = Akai
+    Const(b"\x34"),                 # Dev ID = MPD218
+    Const(b"\x10"),                 # CMD = Dump/Load Preset
+    Const(b"\x04\x1d"),             # Len = 541bytes (7bit stuffed)
 
     "preset" / Byte,
-    "name" / PaddedString(8, "utf8"),
+    "name" / PaddedString(8, "ascii"),  # Pad with spaces!
 
-    # Weird encoding, low byte is only 7 bit, valid 30..300
-    "tempo" / ExprAdapter(Int16ub,
-        ((obj_ & 0x7f) + ((obj_ & 0x0f00) >> 1)),
-        ((obj_ & 0x7f) + ((obj_ & 0x0780) << 1)),
+    "tempo" / ExprAdapter(Int16ub, # 7bit stuffed - each byte max 0x7F
+        ((obj_ & 0x7f) + ((obj_ & 0x7f00) >> 1)),
+        ((obj_ & 0x7f) + ((obj_ & 0x3f80) << 1)),
         ),
 
     "division" / Enum(Byte,
@@ -116,8 +127,8 @@ Footer = Struct(
 
 Mpd218 = Sequence(
     Header,
-    Array(3, Array(16, Pad,)),
-    Array(3, Array(6, Dial,)),
+    Array(_PBANKS, Array(_PADS, Pad,)),
+    Array(_DBANKS, Array(_DIALS, Dial,)),
     Footer,
 )
 
@@ -148,8 +159,8 @@ def edit_swing():
 def edit_dial(dial):
     global config
 
-    bank = int((dial-1) / 6)
-    subdial = dial-(6*bank)-1
+    bank = int((dial-1) / _DIALS)
+    subdial = dial-(_DIALS * bank)-1
 
     menu = qprompt.Menu()
     for x,y in Dial.type.subcon.ksymapping.items():
@@ -191,8 +202,8 @@ def edit_dial(dial):
 def edit_pad(pad):
     global config
 
-    bank = int((pad-1) / 16)
-    subpad = pad-(16*bank)-1
+    bank = int((pad-1) / _PADS)
+    subpad = pad-(_PADS * bank)-1
 
     menu = qprompt.Menu()
     for x,y in Pad.type.subcon.ksymapping.items():
@@ -240,8 +251,8 @@ def edit_pad(pad):
 def edit_scale(pad, verbose):
     global config
 
-    bank = int((pad-1) / 16)
-    subpad = pad-(16*bank)-1
+    bank = int((pad-1) / _PADS)
+    subpad = pad-(_PADS * bank)-1
 
     menu = qprompt.Menu()
     x = 0
@@ -254,7 +265,7 @@ def edit_scale(pad, verbose):
     root = qprompt.ask_int("Note", vld=list(range(0,128)),
         dft=config[1][bank][subpad]['note'])
 
-    count = qprompt.ask_int("Count", vld=[0]+list(range(1,50-pad)), dft=0)
+    count = qprompt.ask_int("Count", vld=[0]+list(range(1,_PTOTAL+2-pad)), dft=0)
 
     scale = Scale.build_scale(Note.from_midi_num(root), stype)
     scale_lst = []
@@ -269,12 +280,13 @@ def edit_scale(pad, verbose):
                 scale_lst.append(note.midi_note_number())
     else:
         count = len(scale_lst)
-        if pad + count > 48:
-            count = 49 - pad
+        if pad + count > _PTOTAL:
+            count = _PTOTAL + 1 - pad
 
     for note in scale_lst[:count]:
-        bank = int((pad-1) / 16)
-        subpad = pad-(16*bank)-1
+        bank = int((pad-1) / _PADS)
+        subpad = pad-(_PADS * bank)-1
+
         config[1][bank][subpad]['note'] = note
         if verbose:
             print("Setting Pad %d (Bank %s-%d) to %d (%s)" %
