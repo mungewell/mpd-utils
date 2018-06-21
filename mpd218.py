@@ -251,21 +251,28 @@ def edit_pad(pad):
 def edit_scale(pad, verbose):
     global config
 
-    bank = int((pad-1) / _PADS)
-    subpad = pad-(_PADS * bank)-1
+    rbank = int((pad-1) / _PADS)
+    rsubpad = pad-(_PADS * rbank)-1
+
+    ptype = config[1][rbank][rsubpad]['type']
+    if ptype == "BANK":
+        qprompt.error("Pad %d (Bank %s-%d) is configured as a BANK" % (pad, chr(65+rbank), rsubpad+1))
+        return
 
     menu = qprompt.Menu()
     x = 0
     for y in Scale._SCALE_PATTERNS:
         menu.add(str(x),y)
         x = x + 1
-    stype = menu.show(hdr="Pad %d (Bank %s-%d):" % (pad, chr(65+bank), subpad+1),
+    stype = menu.show(hdr="Pad %d (Bank %s-%d):" % (pad, chr(65+rbank), rsubpad+1),
         msg="Scale", returns="desc")
     
     root = qprompt.ask_int("Note", vld=list(range(0,128)),
-        dft=config[1][bank][subpad]['note'])
+        dft=config[1][rbank][rsubpad]['note'])
 
     count = qprompt.ask_int("Count", vld=[0]+list(range(1,_PTOTAL+2-pad)), dft=0)
+
+    same = qprompt.ask_yesno(msg="Config all as per Pad %d?" % pad, dft='N')
 
     scale = Scale.build_scale(Note.from_midi_num(root), stype)
     scale_lst = []
@@ -287,7 +294,15 @@ def edit_scale(pad, verbose):
         bank = int((pad-1) / _PADS)
         subpad = pad-(_PADS * bank)-1
 
-        config[1][bank][subpad]['note'] = note
+        if same and ptype == "NOTE":
+            config[1][bank][subpad]['trigger'] = config[1][rbank][rsubpad]['trigger']
+            config[1][bank][subpad]['aftertouch'] = config[1][rbank][rsubpad]['aftertouch']
+
+        if ptype == "NOTE":
+            config[1][bank][subpad]['note'] = note
+        else:
+            config[1][bank][subpad]['program'] = note
+
         if verbose:
             print("Setting Pad %d (Bank %s-%d) to %d (%s)" %
             (pad, chr(65+bank), subpad+1, note, Note.from_midi_num(note)))
