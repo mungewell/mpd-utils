@@ -295,8 +295,12 @@ def edit_scale(pad, verbose):
         subpad = pad-(_PADS * bank)-1
 
         if same and ptype == "NOTE":
+            config[1][bank][subpad]['type'] = config[1][rbank][rsubpad]['type']
             config[1][bank][subpad]['trigger'] = config[1][rbank][rsubpad]['trigger']
             config[1][bank][subpad]['aftertouch'] = config[1][rbank][rsubpad]['aftertouch']
+
+        if same and ptype == "PROG":
+            config[1][bank][subpad]['type'] = config[1][rbank][rsubpad]['type']
 
         if ptype == "NOTE":
             config[1][bank][subpad]['note'] = note
