@@ -167,20 +167,20 @@ def edit_dial(dial):
         menu.add(str(x),y)
         if config[2][bank][subdial]['type'] == y:
             dft = str(x)
-    ptype = menu.show(hdr="Dial %d (Bank %s-%d):" % (dial, chr(65+bank), subdial+1),
-        msg="Type", dft=dft)
-    config[2][bank][subdial]['type'] = int(ptype)
+    dtype = int(menu.show(hdr="Dial %d (Bank %s-%d):" % (dial, chr(65+bank), subdial+1),
+        msg="Type", dft=dft))
+    config[2][bank][subdial]['type'] = dtype
 
     config[2][bank][subdial]['channel'] = \
         qprompt.ask_int("Channel", vld=list(range(0,17)),
             dft=config[2][bank][subdial]['channel'])
 
-    if ptype == '0' or ptype == '2':
+    if dtype == 0 or dtype == 3:    # CC or ID2
         config[2][bank][subdial]['midicc'] = \
             qprompt.ask_int("MidiCC", vld=list(range(0,128)),
                 dft=config[2][bank][subdial]['midicc'])
 
-    if ptype == '0' or ptype == '1':
+    if dtype == 0 or dtype == 1:    # CC or AT
         config[2][bank][subdial]['min'] = \
             qprompt.ask_int("Min", vld=list(range(0,128)),
                 dft=config[2][bank][subdial]['min'])
@@ -188,7 +188,7 @@ def edit_dial(dial):
             qprompt.ask_int("Max", vld=list(range(0,128)),
                 dft=config[2][bank][subdial]['max'])
 
-    if ptype == '3':
+    if dtype == 2:                    # ID1
         config[2][bank][subdial]['msb'] = \
             qprompt.ask_int("MSB", vld=list(range(0,128)),
                 dft=config[2][bank][subdial]['msb'])

@@ -1,0 +1,71 @@
+
+Dial-CC
+==
+-- MENU: Dial 1 (Bank A-1): --
+  (0) CC
+  (1) AFTERTOUCH
+  (2) INC_DEC_1
+  (3) INC_DEC_2
+[?] Type [0]: 
+[?] Channel [1]: 
+[?] MidiCC [0]: 
+[?] Min [0]: 
+[?] Max [127]:
+
+             v---- : Channel
+90270720: 0xb0__** : CC + Count with Dial (limited by min/max)
+
+
+Dial-AfterTouch
+==
+-- MENU: Dial 2 (Bank A-2): --
+  (0) CC
+  (1) AFTERTOUCH
+  (2) INC_DEC_1
+  (3) INC_DEC_2
+[?] Type [1]: 
+[?] Channel [2]: 
+[?] Min [0]: 
+[?] Max [127]: 
+
+             v---- : Channel
+81183744: 0xd0** : Count with Dial (limited by min/max)
+
+
+Dial-IncDec1
+==
+-- MENU: Dial 1 (Bank A-1): --
+  (0) CC
+  (1) AFTERTOUCH
+  (2) INC_DEC_1
+  (3) INC_DEC_2
+[?] Type [2]: 
+[?] Channel [1]: 
+[?] MSB [0]: 
+[?] LSB [0]: 
+[?] Value [0]:
+
+             v---- : Channel
+10746880: 0xb063__ : Non-Registered Parameter Number (NRPN) - MSB
+10746880: 0xb062__ : Non-Registered Parameter Number (NRPN) - LSB
+10746880: 0xb061__ Clockwise : Data Decrement (Data Entry -1) - Value
+     or   0xb060__ AntiClock : Data Decrement (Data Entry -1) - Value
+10746880: 0xb0637f } Q. Why are these sent??
+10746880: 0xb0627f }
+
+
+Dial-IncDec2
+==
+-- MENU: Dial 2 (Bank A-2): --
+  (0) CC
+  (1) AFTERTOUCH
+  (2) INC_DEC_1
+  (3) INC_DEC_2
+[?] Type [3]: 
+[?] Channel [1]: 
+[?] MidiCC [1]: 
+
+             v---- : Channel
+71974912: 0xb0__01 Clockwise : CC
+or
+71981056: 0xb0__7f AntiClock : CC
