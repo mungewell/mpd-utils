@@ -128,6 +128,44 @@ $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 40 F7'
 and loops.....
 ```
 
+# F/W and Serial
+
+```
+$ amidi -p hw:1,0,0 -S 'F0 7e 00 06 01 f7' -r serial.bin
+^C
+35 bytes read
+$ hexdump -Cv serial.bin
+00000000  f0 7e 00 06 02 47 34 00  19 00 01 00 01 00 00 7f  |.~...G4.........|
+00000010  7f 7f 41 33 31 38 30 31  31 36 39 xx xx xx xx xx  |..A31801169xxxxx|
+00000020  xx 00 f7                                          |x..|
+00000023
+```
+
+http://www.akaipro.com/apc40map
+says... which is pretty similar
+```
+1 0xF0 MIDI System exclusive message start
+2 0x7E Non-Realtime Message
+3 <MIDI Channel> Common MIDI channel setting
+4 0x06 Inquiry Message
+5 0x02 Inquiry Response
+6 0x47 Manufacturers ID Byte
+7 0x73 Product model ID
+8 0x00 Number of data bytes to follow (most significant)
+9 0x19 Number of data bytes to follow (least significant)
+10 <Version1> Software version major most significant
+...
+13 <Version4> Software version minor least significant
+14 <DeviceID> System Exclusive Device ID
+15 <Serial1> Serial Number first digit
+...
+18 <Serial4> Serial Number fourth digit
+19 <Manufacturing1> Manufacturing Data byte 1
+...
+34 <Manufacturing16> Manufacturing Data byte 16
+35 0xF7  MIDI System exclusive message terminator
+```
+
 
 also see:
 https://github.com/nsmith-/mpk2
