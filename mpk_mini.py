@@ -66,11 +66,13 @@ Header = Struct(
         ),
     )
 
-Arpeggio = Struct(
-    "enable" / Enum(Byte,
+Arpeggio_enable = Struct(
+    "enable" / Default(Enum(Byte,
         OFF = 0,
         ON = 1,
-        ),
+        ), 0),
+    )
+Arpeggio_mode = Struct(
     "mode" / Enum(Byte,
         UP        = 0,
         DOWN      = 1,
@@ -79,6 +81,8 @@ Arpeggio = Struct(
         RANDOM    = 4,
         ORDER     = 5,
         ),
+    )
+Arpeggio_div = Struct(
     "division" / Enum(Byte,
         DIV_1_4   = 0,
         DIV_1_4T  = 1,
@@ -89,10 +93,14 @@ Arpeggio = Struct(
         DIV_1_32  = 6,
         DIV_1_32T = 7,
         ),
+    )
+Arpeggio_clk = Struct(
     "clock" / Enum(Byte,
         INTERNAL = 0,
         EXTERNAL = 1,
         ),
+    )
+Arpeggio = Struct(
     "latch" / Enum(Byte,
         DISABLE = 0,
         ENABLE  = 1,
@@ -195,8 +203,28 @@ Header_Mk1 = Struct(
     Const(b"\x61"),                 # CMD = Dump/Load Preset
     Const(b"\x00\x66"),             # Len = 102bytes (7bit stuffed)
 
-    Embedded(Header),
+    Embedded(Header),               # Note: different order
+    Embedded(Transpose),
+    Embedded(Arpeggio_clk),
+    Embedded(Arpeggio_div),
+    Embedded(Arpeggio_mode),
     Embedded(Arpeggio),
+    )
+
+Header_Mk2 = Struct(
+    Const(b"\xf0"),                 # SysEx Begin
+    Const(b"\x47\x00"),             # Mfg ID = Akai
+    Const(b"\x26"),                 # Dev ID = MPK Mk2
+    Const(b"\x64"),                 # CMD = Dump/Load Preset
+    Const(b"\x00\x6d"),             # Len = 109bytes (7bit stuffed)
+
+    Embedded(Header),               # Note: different order to Mk1
+    Embedded(Arpeggio_enable),
+    Embedded(Arpeggio_mode),
+    Embedded(Arpeggio_div),
+    Embedded(Arpeggio_clk),
+    Embedded(Arpeggio),
+    Embedded(Joy),
     )
 
 Mpk_mk1 = Sequence(
@@ -206,18 +234,6 @@ Mpk_mk1 = Sequence(
     Empty,
     Footer,
 )
-
-Header_Mk2 = Struct(
-    Const(b"\xf0"),                 # SysEx Begin
-    Const(b"\x47\x00"),             # Mfg ID = Akai
-    Const(b"\x26"),                 # Dev ID = MPK Mk2
-    Const(b"\x64"),                 # CMD = Dump/Load Preset
-    Const(b"\x00\x6d"),             # Len = 109bytes (7bit stuffed)
-
-    Embedded(Header),
-    Embedded(Arpeggio),
-    Embedded(Joy),
-    )
 
 Mpk_mk2 = Sequence(
     Header_Mk2,
