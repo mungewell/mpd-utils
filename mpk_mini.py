@@ -321,6 +321,29 @@ def edit_arpeggio():
     config[0]['clock'] = int(menu.show(msg="Clock", dft=dft))
 
 
+def edit_general():
+    global config
+
+    if config[0]['mk2']:
+        Header = Header_Mk2
+    else:
+        Header = Header_Mk1
+
+    config[0]['pchannel'] = \
+        qprompt.ask_int("Midi Ch for Pads", dft=config[0]['pchannel'])
+
+    config[0]['dchannel'] = \
+        qprompt.ask_int("Midi Ch for Dials/Keys", dft=config[0]['dchannel'])
+
+    menu = qprompt.Menu()
+    for x,y in Header.octave.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['octave'] == y:
+            dft = str(x)
+    config[0]['octave'] = int(menu.show(msg="Keyboard Octave", dft=dft))
+    menu = qprompt.Menu()
+
+
 def edit_joy():
     global config
 
@@ -329,8 +352,6 @@ def edit_joy():
     else:
         quit("Unable to configure Joystick on MK1 configuration, convert " \
                 "to MK2 and try again")
-
-    print(type(Header))
 
     menu = qprompt.Menu()
     for x,y in Header.axis_x.subcon.subcon.ksymapping.items():
@@ -521,9 +542,12 @@ def main():
         help="change the tempo to TEMPO" )
 
     if _hasQPrompt:
-        parser.add_option("-A", "--arpggio",
+        parser.add_option("-A", "--arpeggio",
             help="Interactively configure the Arpeggiator",
             action="store_true", dest="arpeggio")
+        parser.add_option("-G", "--general",
+            help="Interactively configure general settings",
+            action="store_true", dest="general")
         parser.add_option("-J", "--joy",
             help="Interactively configure the Joystick",
             action="store_true", dest="joy")
@@ -585,6 +609,8 @@ def main():
 
     if options.arpeggio:
         edit_arpeggio()
+    if options.general:
+        edit_general()
     if options.joy:
         edit_joy()
     if options.transpose:
