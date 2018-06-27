@@ -197,8 +197,7 @@ Footer = Struct(
 )
 
 Header_Mk1 = Struct(
-    "devtest" / Peek(Int),
-    "mk2" / Computed(this.devtest == 0xf0470026),
+    "mk2" / Computed(False),
 
     Const(b"\xf0"),                 # SysEx Begin
     Const(b"\x47\x7f"),             # Mfg ID = Akai
@@ -215,8 +214,7 @@ Header_Mk1 = Struct(
 )
 
 Header_Mk2 = Struct(
-    "devtest" / Peek(Int),
-    "mk2" / Computed(this.devtest == 0xf0470026),
+    "mk2" / Computed(True),
 
     Const(b"\xf0"),                 # SysEx Begin
     Const(b"\x47\x00"),             # Mfg ID = Akai
@@ -590,11 +588,13 @@ def main():
         config = Mpk_mk2.parse(data)
         if not options.mk1:
             options.mk2 = True
+            config[0]['transpose'] = config[3]['transpose']
     except:
         try:
             config = Mpk_mk1.parse(data)
             if not options.mk2:
                 options.mk1 = True
+                config[3]['transpose'] = config[0]['transpose']
         except:
             quit("Unable to read config file")
     infile.close()
