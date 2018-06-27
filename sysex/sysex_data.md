@@ -142,7 +142,7 @@ $ hexdump -Cv serial.bin
 ```
 
 http://www.akaipro.com/apc40map
-says... which is pretty similar
+says... which looks pretty similar.
 ```
 1 0xF0 MIDI System exclusive message start
 2 0x7E Non-Realtime Message

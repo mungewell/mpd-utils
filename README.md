@@ -12,7 +12,7 @@ The configuration file is a propriatory format and specific to the MPD218.
 configuration files. It may be possible to adjust/tailor the script
 for other Akai devices.
 
-Requires 'construct' (v2.9)
+Requires 'construct' (v2.9):
 https://github.com/construct/construct
 
 Using Construct allows the file format to be defined in one place, allowing
@@ -45,6 +45,7 @@ Options:
 ## Optional features (require other Python 'libraries')
 
 Optionally the settings for Pads/Dials can be interactively editted.
+
 Requires:
 https://github.com/jeffrimko/Qprompt
 
@@ -70,6 +71,7 @@ $ python3 mpd218.py -P 1 example.mpd218
 ```
 
 Optionally multiple Pads can be programmed as a scale.
+
 Requires:
 https://github.com/charlottepierce/music_essentials
 
@@ -176,10 +178,14 @@ $ hexdump -Cv recall_1.mpd218
 
 ## Other Devices
 
+MPK Mini (Mk1 and Mk2) now supported by 'mpk_mini.py' script. Presets
+are number 1..4, setting 0 will result in config be uploaded to RAM 
+and not stored as a preset.
+
+Tested on MK2, Information for MK1 from:
+https://github.com/gljubojevic/akai-mpk-mini-editor
+
 It looks like several other Akai devices follow similar schemes, in
 particular the MPD226, MPK-Mini and MPK2. Raise a bug if you'de like
 to see a similar script for your device...
-
-https://github.com/gljubojevic/akai-mpk-mini-editor
-https://github.com/nsmith-/mpk2
 
