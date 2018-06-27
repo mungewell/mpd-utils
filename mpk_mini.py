@@ -370,12 +370,21 @@ def edit_transpose():
     print(type(Header))
 
     menu = qprompt.Menu()
-    for x,y in Header.transpose.subcon.subcon.ksymapping.items():
-        menu.add(str(x),y)
-        if config[0]['transpose'] == y:
-            dft = str(x)
-    config[0]['transpose'] = int(menu.show(msg="Transpose", dft=dft))
-    menu = qprompt.Menu()
+    if config[0]['mk2']:
+        for x,y in Transpose.transpose.subcon.subcon.ksymapping.items():
+            menu.add(str(x),y)
+            if config[3]['transpose'] == y:
+                dft = str(x)
+    else:
+        for x,y in Header.transpose.subcon.subcon.ksymapping.items():
+            menu.add(str(x),y)
+            if config[0]['transpose'] == y:
+                dft = str(x)
+    transpose = int(menu.show(msg="Transpose", dft=dft))
+
+    # set in both possible places
+    config[0]['transpose'] = transpose
+    config[3]['transpose'] = transpose
 
 
 def edit_dial(dial):
