@@ -48,7 +48,7 @@ _DTOTAL = _DIALS * _DBANKS
 # Define file format using Construct (v2.9)
 # https://github.com/construct/construct
 
-Header = Struct(
+General = Struct(
     "preset" / Byte,
     "pchannel" / Byte,              # Pads
     "dchannel" / Byte,              # Dials and Keys
@@ -147,7 +147,7 @@ Pad = Struct(
     "note" /Byte,
     "midicc" / Byte,
     "prog" / Byte,
-    "trigger" / Enum(Byte,
+    "trigger" / Enum(Byte,          # MidiCC Only
         MOMENTARY = 0,
         TOGGLE = 1,
         ),
@@ -187,7 +187,7 @@ Transpose = Struct(                 # Default values allow Mk1->Mk2 conversion
         TRANS_P11 = 23,
         TRANS_P12 = 24,
         ), 12),
-    )
+)
 
 Empty = Struct(                     # Hack for Mk1 -> MK2 conversion
 )
@@ -197,35 +197,41 @@ Footer = Struct(
 )
 
 Header_Mk1 = Struct(
+    "devtest" / Peek(Int),
+    "mk2" / Computed(this.devtest == 0xf0470026),
+
     Const(b"\xf0"),                 # SysEx Begin
     Const(b"\x47\x7f"),             # Mfg ID = Akai
     Const(b"\x7c"),                 # Dev ID = MPK Mk1
     Const(b"\x61"),                 # CMD = Dump/Load Preset
     Const(b"\x00\x66"),             # Len = 102bytes (7bit stuffed)
 
-    Embedded(Header),               # Note: different order
+    Embedded(General),              # Note: different order
     Embedded(Transpose),
     Embedded(Arpeggio_clk),
     Embedded(Arpeggio_div),
     Embedded(Arpeggio_mode),
     Embedded(Arpeggio),
-    )
+)
 
 Header_Mk2 = Struct(
+    "devtest" / Peek(Int),
+    "mk2" / Computed(this.devtest == 0xf0470026),
+
     Const(b"\xf0"),                 # SysEx Begin
     Const(b"\x47\x00"),             # Mfg ID = Akai
     Const(b"\x26"),                 # Dev ID = MPK Mk2
     Const(b"\x64"),                 # CMD = Dump/Load Preset
     Const(b"\x00\x6d"),             # Len = 109bytes (7bit stuffed)
 
-    Embedded(Header),               # Note: different order to Mk1
+    Embedded(General),              # Note: different order to Mk1
     Embedded(Arpeggio_enable),
     Embedded(Arpeggio_mode),
     Embedded(Arpeggio_div),
     Embedded(Arpeggio_clk),
     Embedded(Arpeggio),
     Embedded(Joy),
-    )
+)
 
 Mpk_mk1 = Sequence(
     Header_Mk1,
@@ -248,8 +254,14 @@ Mpk_mk2 = Sequence(
 
 config = None
 
-def edit_division():
+def edit_arpeggio():
     global config
+
+    if config[0]['mk2']:
+        Header = Header_Mk2
+    else:
+        Header = Header_Mk1
+
 
     menu = qprompt.Menu()
     for x,y in Header.division.subcon.ksymapping.items():
@@ -258,8 +270,26 @@ def edit_division():
             dft = str(x)
     config[0]['division'] = int(menu.show(msg="Division", dft=dft))
 
-def edit_swing():
-    global config
+    menu = qprompt.Menu()
+    for x,y in Header.mode.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['mode'] == y:
+            dft = str(x)
+    config[0]['mode'] = int(menu.show(msg="Mode", dft=dft))
+
+    menu = qprompt.Menu()
+    for x,y in Header.latch.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['latch'] == y:
+            dft = str(x)
+    config[0]['latch'] = int(menu.show(msg="Latch", dft=dft))
+
+    menu = qprompt.Menu()
+    for x,y in Header.octaves.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['octaves'] == y:
+            dft = str(x)
+    config[0]['octaves'] = int(menu.show(msg="Octaves", dft=dft))
 
     menu = qprompt.Menu()
     for x,y in Header.swing.subcon.ksymapping.items():
@@ -268,48 +298,104 @@ def edit_swing():
             dft = str(x)
     config[0]['swing'] = int(menu.show(msg="Swing", dft=dft))
 
+    if config[0]['mk2']:
+        menu = qprompt.Menu()
+        for x,y in Header.enable.subcon.subcon.ksymapping.items():
+            menu.add(str(x),y)
+            if config[0]['enable'] == y:
+                dft = str(x)
+        config[0]['enable'] = int(menu.show(msg="Enable", dft=dft))
+
+    config[0]['taps'] = \
+        qprompt.ask_int("Taps", vld=list(range(2,4)),
+            dft=config[0]['taps'])
+
+    config[0]['tempo'] = \
+        qprompt.ask_int("Tempo", dft=config[0]['tempo'])
+
+    menu = qprompt.Menu()
+    for x,y in Header.clock.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['clock'] == y:
+            dft = str(x)
+    config[0]['clock'] = int(menu.show(msg="Clock", dft=dft))
+
+
+def edit_joy():
+    global config
+
+    if config[0]['mk2']:
+        Header = Header_Mk2
+    else:
+        quit("Unable to configure Joystick on MK1 configuration, convert " \
+                "to MK2 and try again")
+
+    print(type(Header))
+
+    menu = qprompt.Menu()
+    for x,y in Header.axis_x.subcon.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['axis_x'] == y:
+            dft = str(x)
+    config[0]['axis_x'] = int(menu.show(msg="Axis-X", dft=dft))
+    menu = qprompt.Menu()
+
+    config[0]['x_up'] = \
+        qprompt.ask_int("X-Up", dft=config[0]['x_up'])
+
+    config[0]['x_down'] = \
+        qprompt.ask_int("X-Down", dft=config[0]['x_down'])
+
+    for x,y in Header.axis_y.subcon.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['axis_y'] == y:
+            dft = str(x)
+    config[0]['axis_y'] = int(menu.show(msg="Axis-Y", dft=dft))
+
+    config[0]['y_up'] = \
+        qprompt.ask_int("Y-Up", dft=config[0]['y_up'])
+
+    config[0]['y_down'] = \
+        qprompt.ask_int("Y-Down", dft=config[0]['y_down'])
+
+
+def edit_transpose():
+    global config
+
+    if config[0]['mk2']:
+        Header = Header_Mk2
+    else:
+        Header = Header_Mk1
+
+    print(type(Header))
+
+    menu = qprompt.Menu()
+    for x,y in Header.transpose.subcon.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[0]['transpose'] == y:
+            dft = str(x)
+    config[0]['transpose'] = int(menu.show(msg="Transpose", dft=dft))
+    menu = qprompt.Menu()
+
+
 def edit_dial(dial):
     global config
 
     bank = int((dial-1) / _DIALS)
     subdial = dial-(_DIALS * bank)-1
 
-    menu = qprompt.Menu()
-    for x,y in Dial.type.subcon.ksymapping.items():
-        menu.add(str(x),y)
-        if config[2][bank][subdial]['type'] == y:
-            dft = str(x)
-    dtype = int(menu.show(hdr="Dial %d (Bank %s-%d):" % (dial, chr(65+bank), subdial+1),
-        msg="Type", dft=dft))
-    config[2][bank][subdial]['type'] = dtype
+    config[2][bank][subdial]['midicc'] = \
+        qprompt.ask_int("MidiCC", vld=list(range(0,128)),
+            dft=config[2][bank][subdial]['midicc'])
 
-    config[2][bank][subdial]['channel'] = \
-        qprompt.ask_int("Channel", vld=list(range(0,17)),
-            dft=config[2][bank][subdial]['channel'])
+    config[2][bank][subdial]['min'] = \
+        qprompt.ask_int("Min", vld=list(range(0,128)),
+            dft=config[2][bank][subdial]['min'])
 
-    if dtype == 0 or dtype == 3:    # CC or ID2
-        config[2][bank][subdial]['midicc'] = \
-            qprompt.ask_int("MidiCC", vld=list(range(0,128)),
-                dft=config[2][bank][subdial]['midicc'])
+    config[2][bank][subdial]['max'] = \
+        qprompt.ask_int("Max", vld=list(range(0,128)),
+            dft=config[2][bank][subdial]['max'])
 
-    if dtype == 0 or dtype == 1:    # CC or AT
-        config[2][bank][subdial]['min'] = \
-            qprompt.ask_int("Min", vld=list(range(0,128)),
-                dft=config[2][bank][subdial]['min'])
-        config[2][bank][subdial]['max'] = \
-            qprompt.ask_int("Max", vld=list(range(0,128)),
-                dft=config[2][bank][subdial]['max'])
-
-    if dtype == 2:                    # ID1
-        config[2][bank][subdial]['msb'] = \
-            qprompt.ask_int("MSB", vld=list(range(0,128)),
-                dft=config[2][bank][subdial]['msb'])
-        config[2][bank][subdial]['lsb'] = \
-            qprompt.ask_int("LSB", vld=list(range(0,128)),
-                dft=config[2][bank][subdial]['lsb'])
-        config[2][bank][subdial]['value'] = \
-            qprompt.ask_int("Value", vld=list(range(0,128)),
-                dft=config[2][bank][subdial]['value'])
 
 def edit_pad(pad):
     global config
@@ -317,48 +403,25 @@ def edit_pad(pad):
     bank = int((pad-1) / _PADS)
     subpad = pad-(_PADS * bank)-1
 
+    config[1][bank][subpad]['note'] = \
+        qprompt.ask_int("Note", vld=list(range(0,128)),
+            dft=config[1][bank][subpad]['note'])
+
+    config[1][bank][subpad]['midicc'] = \
+        qprompt.ask_int("Midi CC", vld=list(range(0,128)),
+            dft=config[1][bank][subpad]['midicc'])
+
+    config[1][bank][subpad]['prog'] = \
+        qprompt.ask_int("Program", vld=list(range(0,128)),
+            dft=config[1][bank][subpad]['prog'])
+
     menu = qprompt.Menu()
-    for x,y in Pad.type.subcon.ksymapping.items():
+    for x,y in Pad.trigger.subcon.ksymapping.items():
         menu.add(str(x),y)
-        if config[1][bank][subpad]['type'] == y:
+        if config[1][bank][subpad]['trigger'] == y:
             dft = str(x)
-    ptype = menu.show(hdr="Pad %d (Bank %s-%d):" % (pad, chr(65+bank), subpad+1),
-        msg="Type", dft=dft)
-    config[1][bank][subpad]['type'] = int(ptype)
+    config[1][bank][subpad]['trigger'] = int(menu.show(msg="Trigger", dft=dft))
 
-    config[1][bank][subpad]['channel'] = \
-        qprompt.ask_int("Channel", vld=list(range(1,17)),
-            dft=config[1][bank][subpad]['channel'])
-
-    if ptype == '0':
-        config[1][bank][subpad]['note'] = \
-            qprompt.ask_int("Note", vld=list(range(0,128)),
-                dft=config[1][bank][subpad]['note'])
-
-        menu = qprompt.Menu()
-        for x,y in Pad.trigger.subcon.ksymapping.items():
-            menu.add(str(x),y)
-            if config[1][bank][subpad]['trigger'] == y:
-                dft = str(x)
-        config[1][bank][subpad]['trigger'] = int(menu.show(msg="Trigger", dft=dft))
-
-        menu = qprompt.Menu()
-        for x,y in Pad.aftertouch.subcon.ksymapping.items():
-            menu.add(str(x),y)
-            if config[1][bank][subpad]['aftertouch'] == y:
-                dft = str(x)
-        config[1][bank][subpad]['aftertouch'] = int(menu.show(msg="Aftertouch", dft=dft))
-    elif ptype == '1':
-        config[1][bank][subpad]['program'] = \
-            qprompt.ask_int("Program", vld=list(range(0,128)),
-                dft=config[1][bank][subpad]['note'])
-    else:
-        config[1][bank][subpad]['msb'] = \
-            qprompt.ask_int("MSB", vld=list(range(0,128)),
-                dft=config[1][bank][subpad]['msb'])
-        config[1][bank][subpad]['lsb'] = \
-            qprompt.ask_int("LSB", vld=list(range(0,128)),
-                dft=config[1][bank][subpad]['lsb'])
 
 def edit_scale(pad, verbose):
     global config
@@ -366,10 +429,11 @@ def edit_scale(pad, verbose):
     rbank = int((pad-1) / _PADS)
     rsubpad = pad-(_PADS * rbank)-1
 
-    ptype = config[1][rbank][rsubpad]['type']
-    if ptype == "BANK":
-        qprompt.error("Pad %d (Bank %s-%d) is configured as a BANK" % (pad, chr(65+rbank), rsubpad+1))
-        return
+    menu = qprompt.Menu()
+    menu.add("0", "Note")
+    menu.add("1", "Midi-CC")
+    menu.add("2", "Program")
+    ptype = menu.show(msg="Apply Scale to:", returns="desc", dft="0")
 
     menu = qprompt.Menu()
     x = 0
@@ -379,12 +443,20 @@ def edit_scale(pad, verbose):
     stype = menu.show(hdr="Pad %d (Bank %s-%d):" % (pad, chr(65+rbank), rsubpad+1),
         msg="Scale", returns="desc")
     
-    root = qprompt.ask_int("Note", vld=list(range(0,128)),
-        dft=config[1][rbank][rsubpad]['note'])
+    same = None
+    if ptype == "Note":
+        root = qprompt.ask_int("Note", vld=list(range(0,128)),
+            dft=config[1][rbank][rsubpad]['note'])
+
+        same = qprompt.ask_yesno(msg="Config all as per Pad %d?" % pad, dft='N')
+    elif ptype == "Midi-CC":
+        root = qprompt.ask_int("Midi-CC Value", vld=list(range(0,128)),
+            dft=config[1][rbank][rsubpad]['midicc'])
+    else:
+        root = qprompt.ask_int("Program Value", vld=list(range(0,128)),
+            dft=config[1][rbank][rsubpad]['prog'])
 
     count = qprompt.ask_int("Count", vld=[0]+list(range(1,_PTOTAL+2-pad)), dft=0)
-
-    same = qprompt.ask_yesno(msg="Config all as per Pad %d?" % pad, dft='N')
 
     scale = Scale.build_scale(Note.from_midi_num(root), stype)
     scale_lst = []
@@ -406,20 +478,15 @@ def edit_scale(pad, verbose):
         bank = int((pad-1) / _PADS)
         subpad = pad-(_PADS * bank)-1
 
-        if same and ptype == "NOTE":
-            config[1][bank][subpad]['type'] = config[1][rbank][rsubpad]['type']
-            config[1][bank][subpad]['channel'] = config[1][rbank][rsubpad]['channel']
+        if same and ptype == "Note":
             config[1][bank][subpad]['trigger'] = config[1][rbank][rsubpad]['trigger']
-            config[1][bank][subpad]['aftertouch'] = config[1][rbank][rsubpad]['aftertouch']
 
-        if same and ptype == "PROG":
-            config[1][bank][subpad]['type'] = config[1][rbank][rsubpad]['type']
-            config[1][bank][subpad]['channel'] = config[1][rbank][rsubpad]['channel']
-
-        if ptype == "NOTE":
+        if ptype == "Note":
             config[1][bank][subpad]['note'] = note
+        elif ptype == "Midi-CC":
+            config[1][bank][subpad]['midicc'] = note
         else:
-            config[1][bank][subpad]['program'] = note
+            config[1][bank][subpad]['prog'] = note
 
         if verbose:
             print("Setting Pad %d (Bank %s-%d) to %d (%s)" %
@@ -444,14 +511,16 @@ def main():
     parser.add_option("-t", "--tempo", dest="tempo",
         help="change the tempo to TEMPO" )
 
-    '''
     if _hasQPrompt:
-        parser.add_option("-X", "--division",
-            help="Interactively change the Division",
-            action="store_true", dest="division")
-        parser.add_option("-S", "--swing",
-            help="Interactively change the Swing",
-            action="store_true", dest="swing")
+        parser.add_option("-A", "--arpggio",
+            help="Interactively configure the Arpeggiator",
+            action="store_true", dest="arpeggio")
+        parser.add_option("-J", "--joy",
+            help="Interactively configure the Joystick",
+            action="store_true", dest="joy")
+        parser.add_option("-T", "--transpose",
+            help="Interactively configure the Transposing",
+            action="store_true", dest="transpose")
         parser.add_option("-D", "--dial", dest="dial",
             help="Interactively configure a Dial")
         parser.add_option("-P", "--pad", dest="pad",
@@ -460,7 +529,6 @@ def main():
         if _hasME:
             parser.add_option("-M", "--scale", dest="scale",
                 help="Interactively configure multiple Pads as a scale" )
-    '''
 
     # These should be mutally exclusive
     parser.add_option("-1", "--mk1",
@@ -506,11 +574,12 @@ def main():
     if options.tempo:
         config[0]['tempo'] = int(options.tempo)
 
-    '''
-    if options.division:
-        edit_division()
-    if options.swing:
-        edit_swing()
+    if options.arpeggio:
+        edit_arpeggio()
+    if options.joy:
+        edit_joy()
+    if options.transpose:
+        edit_transpose()
     if options.dial:
         edit_dial(int(options.dial))
     if options.pad:
@@ -518,7 +587,6 @@ def main():
 
     if options.scale:
         edit_scale(int(options.scale), options.verbose)
-    '''
 
 
     if options.dump:
