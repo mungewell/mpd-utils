@@ -239,7 +239,7 @@ def edit_pad(pad):
     elif ptype == '1':
         config[1][bank][subpad]['program'] = \
             qprompt.ask_int("Program", vld=list(range(0,128)),
-                dft=config[1][bank][subpad]['note'])
+                dft=config[1][bank][subpad]['program'])
     else:
         config[1][bank][subpad]['msb'] = \
             qprompt.ask_int("MSB", vld=list(range(0,128)),
