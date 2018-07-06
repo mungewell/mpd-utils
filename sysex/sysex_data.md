@@ -56,41 +56,52 @@ when the button is pressed.
 0x0,03: Full Level. 0x00=off, 0x01=on
 0x0,04: Note repeat. 0x00=off, 0x01=on
 ..
-0x0,07: LED mode. 0x00=Normal, 0x01=Preset, 0x02.. Div/Swing/Tempo
+0x0,07: Pad LED mode. 0x00=Normal, 0x01=Preset, 0x02.. Div/Swing/Tempo
 ..
 0x0,0d-0x0,1e: Set Dial values, CC/Aftertouch
 0x0,1f-0x0,30: Set Dial values, repeated???
 0x0,31-0x0,42: Dials, INC-DEC-1/2 mode. 0x01 clock, 0x7f anti-clock
 0x0,43-0x0,54: Dials, INC-DEC-1/2 mode. 0x01 clock, 0x7f anti-clock
 
-0x0,55-0x0,64: Read Button Pressure (0x1,2d below will stop notes/midi)
+0x0,55-0x0,64: Read Button Pressure (addr 0x1,2d below will stop notes/midi)
 
-0x0,65-0x0,74: Force BankA LEDs. 0x00=off, 0x01 on.
-0x0,75-0x1,04: Force BankB LEDs. 0x00=off, 0x01 on.
-0x1,05-0x1,14: Force BankC LEDs. 0x00=off, 0x01 on.
+0x0,65-0x0,74: current Pad BankA LEDs. 0x00=off, 0x01 on.
+0x0,75-0x1,04: current Pad BankB LEDs. 0x00=off, 0x01 on.
+0x1,05-0x1,14: current Pad BankC LEDs. 0x00=off, 0x01 on.
 
-0x1,15-0x1,24: Unknown, can set 0x00 or 0x01 (unused BankD LEDs?)
+0x1,15-0x1,24: Unknown, can set 0x00 or 0x01 (unused 'off' LED color?)
 
-0x1,25: Preset. 0x00-0x0F
+0x1,25: Current Preset. 0x00-0x0F.. = Preset 1..16
 0x1,26: Pad Bank Select. 0x00=BankA, 0x01=BankB, 0x02=Bank3
 0x1,27: Dial Bank Select. 0x00=BankA, 0x01=BankB, 0x02=Bank3
-0x1,28: External Midi Clock. 0x00=off, 0x01=on
+0x1,28: External Midi Clock. 0x00=off (use tap-tempo), 0x01=on
 
-0x1,29: WARNING unit freaks out, might be minimum pressure for NoteOn. Only set=0x15
+0x1,29: WARNING unit freaks out, might be minimum pressure for NoteOn. default=0x15
 0x1,2a: Note Off level? default 0x11, 0x00 keeps LEDs on and no note off is sent
 ..
-0x1,2d: MIDI sent, yes=0x00, no=0x01
+0x1,2d: MIDI sent, yes=0x00, no=0x01 (maybe midi port)
 ..
 0x1,3a:
 ```
 
 ## Device Mode
-no LEDs/no Aftertouch pressure???
+Device mode appears to be set by Global addr 0x0,00
+
+mode = 0x01 (or any bit0 set)
+no LEDs
+no Aftertouch pressure
+pads issue notes, dials do not
 ```
 $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 01 F7'
 ```
 
-Device sends 'polyphonic aftertouch/pressure' via SysEx
+mode = 0x02 (or any bit1 set)
+Pad LEDs work, but Bank/Prog/Full/etc buttons do not change (remain as set)
+
+
+
+mode = 0x20 (or any bit5 set)
+Device sends notes with 'polyphonic aftertouch/pressure' via SysEx
 ```
 $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 20 F7'
 or
@@ -105,6 +116,7 @@ $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 80 F7'
 18297856: 0x893000
 ```
 
+mode = 0x40
 Continuous SysEx messages with polyphonic aftertouch/pressure
 ```
 $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 40 F7'
@@ -127,6 +139,10 @@ $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 40 F7'
 75216896: 0xf0470034480003006400f7
 and loops.....
 ```
+
+mode = 0x41
+no LEDs lit
+continuous reports of buttons, but pressure only 0 or 1
 
 # F/W and Serial
 
