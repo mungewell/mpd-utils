@@ -1,10 +1,10 @@
 '''
-Work around for the lack of proper MPD218 driver in MPC Essentials,
-many functions within DAW do not support control via MIDI notes.
+Work around for the lack of MPD218 driver in MPC Essentials, many
+functions within DAW do not support control via MIDI notes.
 
-This python script detects notes (from MPC preset 5, BankC) and issues
-keyboard presses to the active window, which _do_ drive the functions
-within MPC Essentials.
+This python script detects notes (from MPC preset, BankC) and issue
+keyboard presses to the active window, which do drive the functions
+within MPC Essentials
 
 It 'shims' between MPD218 and MPC essentials, relaying the Midi and
 keypresses. The keypresses are only detected from BankC enable user
@@ -16,17 +16,17 @@ https://github.com/olemb/mido
 https://github.com/boppreh/keyboard
 
 Setup:
-Install the above
+Install the above, or use the pre-built binary
 
 Install the 'Akai Internal MIDI Port' located within MPC directory
 C:\Program Files\Akai Pro\MPC Essentials\support
 
-In MPC Essentials, under Edit/Preferences/Midi set midi-input
+In MPC Essentials, under Edit/Preferences/Midi set a Midi-Output 
 to 'Akai Internal MIDI'.
 
-Run script in command window and then switch back to MPC
+Run script/exe in command window and then switch back to MPC
 '''
-
+import sys
 import mido
 import keyboard
 
@@ -43,7 +43,7 @@ for port in mido.get_input_names():
     break
 
 if inport == None:
-  quit("Unable to find MPD218")
+  sys.exit("Unable to find MPD218")
 
 for port in mido.get_output_names():
   if port[:7]==b'AkaiPro':
@@ -52,7 +52,7 @@ for port in mido.get_output_names():
     break
 
 if outport == None:
-  quit("Unable to find AkaiPro Midi Port")
+  sys.exit("Unable to find AkaiPro Midi Port")
 
 with mido.open_input(inport) as port:
   for message in port:
