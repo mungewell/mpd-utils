@@ -260,6 +260,13 @@ def edit_arpeggio():
     else:
         Header = Header_Mk1
 
+    if config[0]['mk2']:
+        menu = qprompt.Menu()
+        for x,y in Header.enable.subcon.subcon.ksymapping.items():
+            menu.add(str(x),y)
+            if config[0]['enable'] == y:
+                dft = str(x)
+        config[0]['enable'] = int(menu.show(msg="Enable", dft=dft))
 
     menu = qprompt.Menu()
     for x,y in Header.division.subcon.ksymapping.items():
@@ -295,14 +302,6 @@ def edit_arpeggio():
         if config[0]['swing'] == y:
             dft = str(x)
     config[0]['swing'] = int(menu.show(msg="Swing", dft=dft))
-
-    if config[0]['mk2']:
-        menu = qprompt.Menu()
-        for x,y in Header.enable.subcon.subcon.ksymapping.items():
-            menu.add(str(x),y)
-            if config[0]['enable'] == y:
-                dft = str(x)
-        config[0]['enable'] = int(menu.show(msg="Enable", dft=dft))
 
     config[0]['taps'] = \
         qprompt.ask_int("Taps", vld=list(range(2,4)),
@@ -385,8 +384,6 @@ def edit_transpose():
         Header = Header_Mk2
     else:
         Header = Header_Mk1
-
-    print(type(Header))
 
     menu = qprompt.Menu()
     if config[0]['mk2']:
