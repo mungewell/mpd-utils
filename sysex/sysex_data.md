@@ -157,6 +157,8 @@ $ hexdump -Cv serial.bin
 00000023
 ```
 
+
+
 http://www.akaipro.com/apc40map
 says... which looks pretty similar.
 ```
@@ -185,3 +187,14 @@ says... which looks pretty similar.
 
 also see:
 https://github.com/nsmith-/mpk2
+
+
+Unknown
+```
+$ amidi -p hw:1,0,0 -S 'F0 47 00 34 10 00 01 01 F7' -r temp.bin
+^C
+10 bytes read
+simon@thevoid:~/mpd-utils-git/sysex$ hexdump -Cv temp.bin 
+00000000  f0 47 00 34 11 00 02 01  01 f7                    |.G.4......|
+0000000a
+```
