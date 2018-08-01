@@ -1,5 +1,5 @@
 
-# Program and Global Memory
+# Retrieving Program and Global Memory
 
 Program and Global memory can be read via SysEx calls. Due to the 7bit
 limit on the byte count value this has to done in chunks, the returned
@@ -41,10 +41,22 @@ dd bs=64 count=1 skip=10 iflag=skip_bytes if=Global2.bin of=Global.bin seek=1
 dd bs=64 count=1 skip=10 iflag=skip_bytes if=Global3.bin of=Global.bin seek=2
 ```
 
+# Summary of Program Memory
+
+It appears that the program memory is a reflection of the current patch active
+on the unit, but in a different format. Where as the patch is grouped by pad
+(or dial) settings, the program memory has specific settings (ie midi note)
+grouped together.
+
+Appart from this reformating they appear to be the same.
+
+
+
+
 # Summary of Global Memory
 
-I am not sure how Program memory is used by the device, but Global memory
-seems to be a store of the state of things and can be changed on the fly.
+Global memory seems to be a store of the 'state of things' and can be changed 
+on the fly.
 
 Changes to the Dial values will be reflected when the next midi data is 
 sent. Changes the LEDs status will be visible immediately, but cancelled
@@ -88,16 +100,52 @@ when the button is pressed.
 Device mode appears to be set by Global addr 0x0,00
 
 mode = 0x01 (or any bit0 set)
-no LEDs
+no pad LEDs, no bank LEDs, no full level LED (although full level mode works)
 no Aftertouch pressure
-pads issue notes, dials do not
+pads issue note on/off, dials do not issue CCs
+pad/dial bank select does not change issued notes (remains as previously set)
 ```
 $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 01 F7'
 ```
 
 mode = 0x02 (or any bit1 set)
-Pad LEDs work, but Bank/Prog/Full/etc buttons do not change (remain as set)
+Pad LEDs work, but Bank/Prog/Full/etc buttons do not function (LEDs and modes
+remain as previously set).
+Banks/Full/Repeat can still be set via SysEx.
 
+
+mode = 0x08 (or any bit3 set)
+Bank/Prog/Full/Config/Repeat button presses reported via SysEx
+116779008: 0xf04700344000020501f7
+116786176: 0xf04700344000020500f7
+116900864: 0xf04700344000020401f7
+116913152: 0xf04700344000020400f7
+116944896: 0xf04700344000020301f7
+116957184: 0xf04700344000020300f7
+
+
+mode = 0x10 (or any bit4 set)
+dial/encoder values reported via SysEx
+123463680: 0xb00303
+123463680: 0xf04700344100020044f7
+123468800: 0xb00302
+123468800: 0xf04700344100020043f7
+123472896: 0xb00301
+123472896: 0xf04700344100020042f7
+123476992: 0xb00300
+123476992: 0xf04700344100020041f7
+123482112: 0xf04700344100020040f7
+123490304: 0xf0470034410002003ff7
+123496448: 0xf0470034410002003ef7
+
+encoder value is not locked to CC value, and will continue/loop when CC
+reaches max. encoder number doesn't change with bank
+128304128: 0xf04700344100020001f7
+128307200: 0xf04700344100020000f7
+128311296: 0xf0470034410002007ff7
+128314368: 0xf0470034410002007ef7
+128318464: 0xf0470034410002007df7
+128323584: 0xf0470034410002007cf7
 
 
 mode = 0x20 (or any bit5 set)
@@ -140,9 +188,11 @@ $ amidi -p hw:1,0,0 -S 'F0 47 00 34 30 00 04 01 00 00 40 F7'
 and loops.....
 ```
 
-mode = 0x41
+mode = 0x39
 no LEDs lit
-continuous reports of buttons, but pressure only 0 or 1
+pads/dials/buttons reported via SysEx
+(use 0x1,2d to turn notes off)
+this may be the route to proper support within MPC Essentials/MPC2
 
 # F/W and Serial
 
