@@ -91,10 +91,31 @@ when the button is pressed.
 0x1,29: WARNING unit freaks out, might be minimum pressure for NoteOn. default=0x15
 0x1,2a: Note Off level? default 0x11, 0x00 keeps LEDs on and no note off is sent
 ..
-0x1,2d: MIDI sent, yes=0x00, no=0x01 (maybe midi port)
+0x1,2c: Midi Channel? default 0x09 - channel is normally pad/dial specific
+0x1,2d: Midi Output?. USB=0x00, ?=0x01 (stops Notes/CC/etc, SysEx still to USB)
+..
+0x1,32: Swing? default 0x32=50
 ..
 0x1,3a:
 ```
+
+Features supported on the MPD-226 which the MPD-218 firmware might support
+```
+16 level
+extra pad bank
+off colors for pads
+repeat toggle mode (226 has LED)
+repeat gate
+
+midi to din
+
+midi common control ch
+
+pad threshold
+velocity curve
+pad gain
+```
+
 
 ## Device Mode
 Device mode appears to be set by Global addr 0x0,00
@@ -215,44 +236,6 @@ $ hexdump -Cv serial.bin
 00000023
 ```
 
-
-
-http://www.akaipro.com/apc40map
-says... which looks pretty similar.
-```
-1 0xF0 MIDI System exclusive message start
-2 0x7E Non-Realtime Message
-3 <MIDI Channel> Common MIDI channel setting
-4 0x06 Inquiry Message
-5 0x02 Inquiry Response
-6 0x47 Manufacturers ID Byte
-7 0x73 Product model ID
-8 0x00 Number of data bytes to follow (most significant)
-9 0x19 Number of data bytes to follow (least significant)
-10 <Version1> Software version major most significant
-...
-13 <Version4> Software version minor least significant
-14 <DeviceID> System Exclusive Device ID
-15 <Serial1> Serial Number first digit
-...
-18 <Serial4> Serial Number fourth digit
-19 <Manufacturing1> Manufacturing Data byte 1
-...
-34 <Manufacturing16> Manufacturing Data byte 16
-35 0xF7  MIDI System exclusive message terminator
-```
-
-
 also see:
 https://github.com/nsmith-/mpk2
 
-
-Unknown
-```
-$ amidi -p hw:1,0,0 -S 'F0 47 00 34 10 00 01 01 F7' -r temp.bin
-^C
-10 bytes read
-simon@thevoid:~/mpd-utils-git/sysex$ hexdump -Cv temp.bin 
-00000000  f0 47 00 34 11 00 02 01  01 f7                    |.G.4......|
-0000000a
-```
