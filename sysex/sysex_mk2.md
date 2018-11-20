@@ -1,5 +1,5 @@
 
-
+Device enquiry
 ```
 $ amidi -p hw:1,0,0 -S 'F0 7e 00 06 01 f7' -r serial.bin
 ^C
@@ -11,7 +11,7 @@ $ hexdump -Cv serial.bin
 00000022
 ```
 
-
+Knob position enquiry - the values for the 8 knobs will be reported as 0..0x7F values.
 ```
 simon@thevoid:~/mpd-utils-git/sysex$ amidi -p hw:1,0,0 -S 'F0 47 00 26 60 00 03 00 00 01 f7' -r temp.bin
 ^C
@@ -32,18 +32,32 @@ simon@thevoid:~/mpd-utils-git/sysex$ amidi -p hw:1,0,0 -S 'F0 47 00 26 60 f7' -r
 00000010
 ```
 
-
-No response, but turns off Arpeggitor, would seem to be a write of some form
-last byte:
-0x00 has no effect
-0x01 turn off arp, and octave buttons
-0x02 turn off arp, and octave buttons
-0x04 turn off octave buttons
+All knobs turned down to minimum
 ```
-$ amidi -p hw:1,0,0 -S 'F0 47 00 26 62 00 01 01 f7' -r temp.bin ; hexdump -Cv temp.bin  
+$ amidi -p hw:1,0,0 -S 'F0 47 00 26 60 f7' -r temp.bin ; hexdump -C temp.bin
 ^C
+16 bytes read
+00000000  f0 47 00 26 61 00 08 00  00 00 00 00 00 00 00 f7  |.G.&a...........|
+00000010
+```
+
+All knobs turned up to maximum
+```
+$ amidi -p hw:1,0,0 -S 'F0 47 00 26 60 f7' -r temp.bin ; hexdump -C temp.bin
+^C
+16 bytes read
+00000000  f0 47 00 26 61 00 08 7f  7f 7f 7f 7f 7f 7f 7f f7  |.G.&a...........|
+00000010
+```
+
+select preset
+```
+$ amidi -p hw:1,0,0 -S 'F0 47 00 26 62 00 01 02 f7' -r temp.bin
+^C                                           ^^ preset to select
 0 bytes read
 ```
+
+Normally cmd 0x64 is used to upload a preset to the device, as per config file.
 
 Malformed writes can corrupt presets, nothing is returned by keyboard crashes and 
 preset is 'bad' on next boot/read
@@ -51,7 +65,7 @@ preset is 'bad' on next boot/read
 $ amidi -p hw:1,0,0 -S 'F0 47 00 26 64 00 01 00 F7' -r temp.bin
 ```
 
-This appears to be the command to read back the presets (0x00..0x04), however note that
+This appears to be the command to read back the presets (0x00=ram, 0x01..0x04), however note that
 'cmd 0x67' is not the same as the official presets, and these don't upload with tweaking
 it to '0x64'
 ```
@@ -70,8 +84,7 @@ $ hexdump -Cv recall_4.mpk2
 00000075
 ```
 
-
-
+report current preset
 ```
 $ amidi -p hw:1,0,0 -S 'F0 47 00 26 68 00 00 F7' -r temp.bin
 ^C
@@ -82,9 +95,3 @@ $ hexdump -Cv temp.bin
 00000009
 ```
 
-select preset
-```
-$ amidi -p hw:1,0,0 -S 'F0 47 00 26 62 00 01 02 f7' -r temp.bin
-^C                                           ^^ preset to select
-0 bytes read
-```

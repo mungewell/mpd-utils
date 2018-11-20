@@ -8,7 +8,7 @@ a controller for a Digital Audio Workshop.
 
 The configuration file is a propriatory format and specific to the MPD218.
 
-'mpd219.py' is a command line application which can decode/encode the
+'mpd218.py' is a command line application which can decode/encode the
 configuration files. It may be possible to adjust/tailor the script
 for other Akai devices.
 
@@ -186,6 +186,7 @@ Tested on MK2, Information for MK1 from:
 https://github.com/gljubojevic/akai-mpk-mini-editor
 
 It looks like several other Akai devices follow similar schemes, in
-particular the MPD226, MPK-Mini and MPK2. Raise a bug if you'de like
-to see a similar script for your device...
+particular the MPD226, MPK-Mini (see above)  and MPK2. 
+
+Raise a bug if you'de like to see a similar script for your device...
 

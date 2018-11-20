@@ -58,22 +58,23 @@ Appart from this reformating they appear to be the same.
 Global memory seems to be a store of the 'state of things' and can be changed 
 on the fly.
 
-Changes to the Dial values will be reflected when the next midi data is 
-sent. Changes the LEDs status will be visible immediately, but cancelled
+Changes forced to the Dial values will be reflected when the next midi data is 
+sent. Changes forced the LEDs status will be visible immediately, but cancelled
 when the button is pressed.
 
 ```
 0x0,00: Device Mode (see below)
 ..
 0x0,03: Full Level. 0x00=off, 0x01=on
-0x0,04: Note repeat. 0x00=off, 0x01=on
+0x0,04: Note repeat. 0x00=off, 0x01=on (no LED on MPD218)
 ..
-0x0,07: Pad LED mode. 0x00=Normal, 0x01=Preset, 0x02.. Div/Swing/Tempo
+0x0,07: Pad LEDs mode. 0x00=Normal, 0x01=ProgSelect (Preset #),
+		0x02..= NRConfig (Div/Swing/Tempo)
 ..
-0x0,0d-0x0,1e: Set Dial values, CC/Aftertouch
-0x0,1f-0x0,30: Set Dial values, repeated???
-0x0,31-0x0,42: Dials, INC-DEC-1/2 mode. 0x01 clock, 0x7f anti-clock
-0x0,43-0x0,54: Dials, INC-DEC-1/2 mode. 0x01 clock, 0x7f anti-clock
+0x0,0d-0x0,1e: Dial values, CC/Aftertouch
+0x0,1f-0x0,30: Dial values, repeated???
+0x0,31-0x0,42: Dials, INC-DEC-1/2 mode. 0x01 turned clock, 0x7f anti-clock
+0x0,43-0x0,54: Dials, INC-DEC-1/2 mode. 0x01 turned clock, 0x7f anti-clock
 
 0x0,55-0x0,64: Read Button Pressure (addr 0x1,2d below will stop notes/midi)
 
@@ -91,29 +92,36 @@ when the button is pressed.
 0x1,29: WARNING unit freaks out, might be minimum pressure for NoteOn. default=0x15
 0x1,2a: Note Off level? default 0x11, 0x00 keeps LEDs on and no note off is sent
 ..
-0x1,2c: Midi Channel? default 0x09 - channel is normally pad/dial specific
+0x1,2c: Midi Common Channel? default 0x09 - normally pad/dial specific
 0x1,2d: Midi Output?. USB=0x00, ?=0x01 (stops Notes/CC/etc, SysEx still to USB)
 ..
-0x1,32: Swing? default 0x32=50
+0x1,2f: Tap Average. 2-4 taps
+..
+0x1,32: ? default 0x32=50
 ..
 0x1,3a:
 ```
 
-Features supported on the MPD-226 which the MPD-218 firmware might support
+Features supported on the MPD-226/MPD-232 which the MPD-218 firmware might support
 ```
 16 level
 extra pad bank
 off colors for pads
-repeat toggle mode (226 has LED)
-repeat gate
+repeat toggle mode (226/232 has LED to indicate)
+repeat gate (1-99%, sequenced note duty factory)
 
-midi to din
+midi to din - on/off, set for each pad/dial individually
 
-midi common control ch
+midi common control ch (USB A1-16=1..16, DIN B1-16=17..32)
 
-pad threshold
-velocity curve
-pad gain
+
+pad threshold (0-10)
+velocity curve (Linear, Exp1, Exp2, Log1, and Log2)
+pad gain (1-10)
+
+tap average - number of taps needed 2-4
+lock? - 0-off, 1-on
+demo? - 0-off, 1-on
 ```
 
 
@@ -223,7 +231,7 @@ mode = 0x39
 no LEDs lit, pads/dials/buttons reported via SysEx (use 0x1,2d to turn notes off).
 This may be the route to 'proper' support within MPC Essentials/MPC2
 
-# F/W and Serial
+# Device enquiry - F/W and Serial
 
 ```
 $ amidi -p hw:1,0,0 -S 'F0 7e 00 06 01 f7' -r serial.bin
