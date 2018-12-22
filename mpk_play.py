@@ -183,7 +183,7 @@ Transpose = Struct(
         ), 12),
 )
 
-Play_sounds = Struct(
+Sounds = Struct(
     "keys" / Byte,
     "drums" / Byte,
 
@@ -198,14 +198,13 @@ Play_sounds = Struct(
     "eq_high" / Byte,
     )
 '''
-    "keys" / Enum(Byte,
+# Lists need to be filled
+    "keys" / Default(Enum(Byte,
         PIANO     = 0,
-        LAST      = 127,
-        ),
-    "drums" / Enum(Byte,
+        ), 0),
+    "drums" / Default(Enum(Byte,
         STANDARD  = 0,
-        LAST      = 9,
-        ),
+        ), 0),
 '''
 
 Footer = Struct(
@@ -235,7 +234,7 @@ Mpk_Play = Sequence(
     Array(_PBANKS, Array(_PADS, Pad,)),
     Array(_DBANKS, Array(_DIALS, Dial,)),
     Transpose,
-    Play_sounds,
+    Sounds,
     Footer,
 )
 
@@ -398,6 +397,59 @@ def edit_pad(pad):
     menu = qprompt.Menu()
 
 
+def edit_sound():
+    global config
+
+    menu = qprompt.Menu()
+    '''
+    for x,y in Sounds.keys.subcon.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[4]['keys'] == y:
+            dft = str(x)
+    config[4]['keys'] = int(menu.show(msg="Key Sound", dft=dft))
+    '''
+    config[4]['keys'] = \
+        qprompt.ask_int("Key Sound", vld=list(range(0,128)),
+            dft=config[4]['keys'])
+
+    '''
+    for x,y in Sounds.drums.subcon.subcon.ksymapping.items():
+        menu.add(str(x),y)
+        if config[4]['drums'] == y:
+            dft = str(x)
+    config[4]['drums'] = int(menu.show(msg="Drum Sound", dft=dft))
+    '''
+    config[4]['drums'] = \
+        qprompt.ask_int("Drum Sound", vld=list(range(0,10)),
+            dft=config[4]['drums'])
+
+    config[4]['filter'] = \
+        qprompt.ask_int("Filter", vld=list(range(0,128)),
+            dft=config[4]['filter'])
+    config[4]['res'] = \
+        qprompt.ask_int("Resonence", vld=list(range(0,128)),
+            dft=config[4]['res'])
+    config[4]['reverb'] = \
+        qprompt.ask_int("Reverb", vld=list(range(0,128)),
+            dft=config[4]['reverb'])
+    config[4]['chorus'] = \
+        qprompt.ask_int("Chorus", vld=list(range(0,128)),
+            dft=config[4]['chorus'])
+
+    config[4]['attack'] = \
+        qprompt.ask_int("Attack", vld=list(range(0,128)),
+            dft=config[4]['attack'])
+    config[4]['release'] = \
+        qprompt.ask_int("Release", vld=list(range(0,128)),
+            dft=config[4]['release'])
+    config[4]['eq_low'] = \
+        qprompt.ask_int("EQ Low", vld=list(range(0,128)),
+            dft=config[4]['eq_low'])
+    config[4]['eq_high'] = \
+        qprompt.ask_int("EQ High", vld=list(range(0,128)),
+            dft=config[4]['eq_high'])
+
+
 def edit_scale(pad, verbose):
     global config
 
@@ -479,6 +531,9 @@ def main():
             help="Interactively configure a Dial")
         parser.add_option("-P", "--pad", dest="pad",
             help="Interactively configure a Pad" )
+        parser.add_option("-S", "--sound",
+            help="Interactively configure Key and Drum sounds",
+            action="store_true", dest="sound")
 
         if _hasME:
             parser.add_option("-M", "--scale", dest="scale",
@@ -521,6 +576,8 @@ def main():
         edit_dial(int(options.dial))
     if options.pad:
         edit_pad(int(options.pad))
+    if options.sound:
+        edit_sound()
 
     if options.scale:
         edit_scale(int(options.scale), options.verbose)
