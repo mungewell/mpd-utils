@@ -213,11 +213,10 @@ Footer = Struct(
 
 Header = Struct(
     Const(b"\xf0"),                 # SysEx Begin
-    Const(b"\x47\x7f"),             # Mfg ID = Akai
+    Const(b"\x47\x00"),             # Mfg ID = Akai
     Const(b"\x44"),                 # Dev ID = MPK Mini Play
     Const(b"\x64"),                 # CMD = Dump/Load Preset
-    Const(b"\x00\x63"),             # Len = 99bytes (7bit stuffed)
-                                    # Note: doesn't match actual size...
+    Const(b"\x00\x47"),             # Len = 71bytes (7bit stuffed)
 
     Embedded(General),              # Note: different order to Mk1
 
