@@ -20,6 +20,9 @@ parser.add_option("-o", "--output", dest="outfile",
 parser.add_option("-v", "--verbose",
     action="store_true", dest="verbose")
 
+parser.add_option("-n", "--name", dest="name",
+    help="change name of the keygroup")
+
 parser.add_option("-s", "--semi", dest="semi",
     help="change position of notes by number of SEMI-tones (positive or negative)")
 
@@ -42,6 +45,10 @@ root = tree.getroot()
 # Find the instruments section
 program = root.find("Program")
 instruments = program.find("Instruments")
+
+if options.name:
+   name = program.find("ProgramName")
+   name.text = options.name
 
 lowest = 128
 highest = 0
