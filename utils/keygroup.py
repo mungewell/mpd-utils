@@ -68,7 +68,7 @@ for instrument in instruments.iter("Instrument"):
             if sample_name.text:
                inst_active = True 
 
-   # ingnore instrucments which are no used
+   # ignore instruments which are not used
    if not inst_active:
       if options.merge:
          if options.verbose:
@@ -138,7 +138,7 @@ if options.merge:
                if sample_name.text:
                   inst_active = True 
 
-      # ingnore instrucments which are no used
+      # ignore instruments which are not used
       if not inst_active:
          continue
 
