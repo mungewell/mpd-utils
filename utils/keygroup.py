@@ -23,6 +23,9 @@ parser.add_option("-v", "--verbose",
 parser.add_option("-n", "--name", dest="name",
     help="change name of the keygroup")
 
+parser.add_option("-d", "--delete", dest="delete",
+    help="delete a specific instrument")
+
 parser.add_option("-s", "--semi", dest="semi",
     help="change position of notes by number of SEMI-tones (positive or negative)")
 
@@ -55,7 +58,7 @@ highest = 0
 last_inst = 0
 
 # print out all the high and low notes for each instrument
-for instrument in instruments.iter("Instrument"):
+for instrument in list(instruments.iter("Instrument")):
    if options.verbose:
       print(instrument.tag, instrument.attrib)
 
@@ -76,8 +79,18 @@ for instrument in instruments.iter("Instrument"):
          instruments.remove(instrument)
       continue
 
-   last_inst = int(instrument.attrib['number'])
+   # ignore instruments which are marked for deletion
+   if options.delete:
+      if int(options.delete) == int(instrument.attrib['number']):
+         if options.verbose:
+            print("Deleting instrument:", instrument.attrib)
+         instruments.remove(instrument) # Why is this deleting next instrument as well?
+         continue
 
+   # have to re-write instrument numbers as one (or more)
+   # may have been deleted
+   last_inst = last_inst + 1
+   instrument.attrib['number'] = str(last_inst)
 
    ignore_base_note = False
    if instrument.find("IgnoreBaseNote").text == "True":
@@ -151,9 +164,9 @@ if options.merge:
       # this is the original XML tree
       instruments.append(instrument)
 
-   # Correct the number of keygroups
-   keygroups = program.find("KeygroupNumKeygroups")
-   keygroups.text = str(last_inst)
+# Correct the number of keygroups
+keygroups = program.find("KeygroupNumKeygroups")
+keygroups.text = str(last_inst)
 
 # ---------------------
 # write out the changes
