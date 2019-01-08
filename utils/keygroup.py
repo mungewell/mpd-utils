@@ -26,6 +26,9 @@ parser.add_option("-n", "--name", dest="name",
 parser.add_option("-d", "--delete", dest="delete",
     help="delete a specific instrument")
 
+parser.add_option("-D", "--delrange", dest="delrange",
+    help="delete a range of instruments (positive=up-to, negative=from)")
+
 parser.add_option("-s", "--semi", dest="semi",
     help="change position of notes by number of SEMI-tones (positive or negative)")
 
@@ -84,7 +87,14 @@ for instrument in list(instruments.iter("Instrument")):
       if int(options.delete) == int(instrument.attrib['number']):
          if options.verbose:
             print("Deleting instrument:", instrument.attrib)
-         instruments.remove(instrument) # Why is this deleting next instrument as well?
+         instruments.remove(instrument)
+         continue
+   if options.delrange:
+      if ((int(options.delrange) > 0 and int(options.delrange) >= int(instrument.attrib['number'])) or
+            (int(options.delrange) < 0 and (0-int(options.delrange)) <= int(instrument.attrib['number']))):
+         if options.verbose:
+            print("Deleting range:", instrument.attrib)
+         instruments.remove(instrument)
          continue
 
    # have to re-write instrument numbers as one (or more)
