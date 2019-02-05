@@ -56,12 +56,10 @@ if outport == None:
 
 with mido.open_input(inport) as port:
   for message in port:
-    #print(message)
-    outport.send(message)
-
     note_on=False
-    key=False
+    key=None
     if message.channel !=9:
+      outport.send(message)
       continue
     if message.type=='note_on':
       note_on=True
@@ -107,3 +105,5 @@ with mido.open_input(inport) as port:
         keyboard.press(key)
       else:
         keyboard.release(key)
+    else:
+      outport.send(message)
