@@ -1,0 +1,26 @@
+0x06, 0xA0, 0xFF,   /*  Usage Page (FFA0h),             */
+0x09, 0x01,         /*  Usage (01h),                    */
+0xA1, 0x01,         /*  Collection (Application),       */
+0x09, 0x02,         /*      Usage (02h),                */
+0xA1, 0x00,         /*      Collection (Physical),      */
+0x06, 0xA1, 0xFF,   /*          Usage Page (FFA1h),     */
+0x09, 0x03,         /*          Usage (03h),            */
+0x09, 0x04,         /*          Usage (04h),            */
+0x15, 0x18,         /*          Logical Minimum (24),   */
+0x25, 0x7F,         /*          Logical Maximum (127),  */
+0x35, 0x00,         /*          Physical Minimum (0),   */
+0x45, 0xFF,         /*          Physical Maximum (-1),  */
+0x75, 0x08,         /*          Report Size (8),        */
+0x95, 0x20,         /*          Report Count (32),      */
+0x81, 0x02,         /*          Input (Variable),       */
+0x09, 0x05,         /*          Usage (05h),            */
+0x09, 0x06,         /*          Usage (06h),            */
+0x15, 0x80,         /*          Logical Minimum (-128), */
+0x25, 0x7F,         /*          Logical Maximum (127),  */
+0x35, 0x00,         /*          Physical Minimum (0),   */
+0x45, 0xFF,         /*          Physical Maximum (-1),  */
+0x75, 0x08,         /*          Report Size (8),        */
+0x95, 0x20,         /*          Report Count (32),      */
+0x91, 0x02,         /*          Output (Variable),      */
+0xC0,               /*      End Collection,             */
+0xC0                /*  End Collection                  */

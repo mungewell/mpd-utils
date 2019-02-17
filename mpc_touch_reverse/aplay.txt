@@ -1,0 +1,46 @@
+default
+    Playback/recording through the PulseAudio sound server
+null
+    Discard all samples (playback) or generate zero samples (capture)
+pulse
+    PulseAudio Sound Server
+...
+sysdefault:CARD=Touch
+    MPC Touch, USB Audio
+    Default Audio Device
+front:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    Front speakers
+surround21:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    2.1 Surround output to Front and Subwoofer speakers
+surround40:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    4.0 Surround output to Front and Rear speakers
+surround41:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    4.1 Surround output to Front, Rear and Subwoofer speakers
+surround50:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    5.0 Surround output to Front, Center and Rear speakers
+surround51:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    5.1 Surround output to Front, Center, Rear and Subwoofer speakers
+surround71:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    7.1 Surround output to Front, Center, Side, Rear and Woofer speakers
+iec958:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    IEC958 (S/PDIF) Digital Audio Output
+dmix:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    Direct sample mixing device
+dsnoop:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    Direct sample snooping device
+hw:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    Direct hardware device without any conversions
+plughw:CARD=Touch,DEV=0
+    MPC Touch, USB Audio
+    Hardware device with all software conversions

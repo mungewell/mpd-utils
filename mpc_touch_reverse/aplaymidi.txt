@@ -1,0 +1,5 @@
+ Port    Client name                      Port name
+ 14:0    Midi Through                     Midi Through Port-0
+ 20:0    MPC Touch                        MPC Touch MIDI 1
+ 20:1    MPC Touch                        MPC Touch MIDI 2
+ 20:2    MPC Touch                        MPC Touch MIDI 3

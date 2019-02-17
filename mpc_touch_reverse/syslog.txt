@@ -1,0 +1,38 @@
+Feb 17 10:07:42 thevoid kernel: [ 1846.443513] usb 1-2: new high-speed USB device number 8 using xhci_hcd
+Feb 17 10:07:42 thevoid kernel: [ 1846.597587] usb 1-2: New USB device found, idVendor=04b4, idProduct=6572, bcdDevice=32.99
+Feb 17 10:07:42 thevoid kernel: [ 1846.597596] usb 1-2: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+Feb 17 10:07:42 thevoid kernel: [ 1846.597601] usb 1-2: Product: USB2.0 Hub
+Feb 17 10:07:42 thevoid kernel: [ 1846.598938] hub 1-2:1.0: USB hub found
+Feb 17 10:07:42 thevoid kernel: [ 1846.599274] hub 1-2:1.0: 4 ports detected
+Feb 17 10:07:42 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.0
+Feb 17 10:07:42 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2
+Feb 17 10:07:42 thevoid kernel: [ 1846.887513] usb 1-2.1: new high-speed USB device number 9 using xhci_hcd
+Feb 17 10:07:42 thevoid kernel: [ 1846.992661] usb 1-2.1: New USB device found, idVendor=17e9, idProduct=ff00, bcdDevice=37.43
+Feb 17 10:07:42 thevoid kernel: [ 1846.992674] usb 1-2.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+Feb 17 10:07:42 thevoid kernel: [ 1846.992683] usb 1-2.1: Product: MPC Touch Screen
+Feb 17 10:07:42 thevoid kernel: [ 1846.992691] usb 1-2.1: Manufacturer: DisplayLink
+Feb 17 10:07:42 thevoid kernel: [ 1846.992698] usb 1-2.1: SerialNumber: 03114561
+Feb 17 10:07:42 thevoid mtp-probe: checking bus 1, device 9: "/sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.1"
+Feb 17 10:07:42 thevoid mtp-probe: bus: 1, device: 9 was not an MTP device
+Feb 17 10:07:42 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.1
+Feb 17 10:07:42 thevoid kernel: [ 1847.075504] usb 1-2.3: new full-speed USB device number 10 using xhci_hcd
+Feb 17 10:07:43 thevoid kernel: [ 1847.179793] usb 1-2.3: New USB device found, idVendor=09e8, idProduct=0037, bcdDevice= 0.00
+Feb 17 10:07:43 thevoid kernel: [ 1847.179799] usb 1-2.3: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+Feb 17 10:07:43 thevoid kernel: [ 1847.179804] usb 1-2.3: Product: MPC Touch
+Feb 17 10:07:43 thevoid kernel: [ 1847.179807] usb 1-2.3: Manufacturer: AKAI
+Feb 17 10:07:43 thevoid kernel: [ 1847.191248] hid-generic 0003:09E8:0037.0004: hiddev1,hidraw2: USB HID v1.11 Device [AKAI MPC Touch] on usb-0000:00:14.0-2.3/input0
+Feb 17 10:07:43 thevoid mtp-probe: checking bus 1, device 10: "/sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3"
+Feb 17 10:07:43 thevoid mtp-probe: bus: 1, device: 10 was not an MTP device
+Feb 17 10:07:43 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3/1-2.3:1.3
+Feb 17 10:07:43 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3/1-2.3:1.4
+Feb 17 10:07:43 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3/1-2.3:1.0/0003:09E8:0037.0004
+Feb 17 10:07:43 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3/1-2.3:1.2
+Feb 17 10:07:43 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3/1-2.3:1.0
+Feb 17 10:07:43 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3/1-2.3:1.1
+Feb 17 10:07:43 thevoid upowerd[1240]: unhandled action 'bind' on /sys/devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.3
+Feb 17 10:07:43 thevoid rtkit-daemon[1205]: Supervising 3 threads of 1 processes of 1 users.
+Feb 17 10:07:43 thevoid rtkit-daemon[1205]: Successfully made thread 3132 of process 1202 (n/a) owned by '1000' RT at priority 5.
+Feb 17 10:07:43 thevoid rtkit-daemon[1205]: Supervising 4 threads of 1 processes of 1 users.
+Feb 17 10:07:43 thevoid rtkit-daemon[1205]: Supervising 4 threads of 1 processes of 1 users.
+Feb 17 10:07:43 thevoid rtkit-daemon[1205]: Successfully made thread 3135 of process 1202 (n/a) owned by '1000' RT at priority 5.
+Feb 17 10:07:43 thevoid rtkit-daemon[1205]: Supervising 5 threads of 1 processes of 1 users.
