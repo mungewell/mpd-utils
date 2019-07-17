@@ -27,7 +27,7 @@ parser.add_option("-d", "--delete", dest="delete",
     help="delete a specific instrument")
 
 parser.add_option("-D", "--delrange", dest="delrange",
-    help="delete a range of instruments (positive=up-to, negative=from)")
+    help="delete a range of instruments (positive=up-to, negative=up-from)")
 
 parser.add_option("-s", "--semi", dest="semi",
     help="change position of notes by number of SEMI-tones (positive or negative)")
@@ -90,12 +90,30 @@ for instrument in list(instruments.iter("Instrument")):
          instruments.remove(instrument)
          continue
    if options.delrange:
-      if ((int(options.delrange) > 0 and int(options.delrange) >= int(instrument.attrib['number'])) or
-            (int(options.delrange) < 0 and (0-int(options.delrange)) <= int(instrument.attrib['number']))):
+      for note in instrument.iter("LowNote"):
+         low_note = int(note.text)
+      for note in instrument.iter("HighNote"):
+         high_note = int(note.text)
+
+      # delete outright
+      if ((int(options.delrange) > 0 and int(options.delrange) >= high_note) or
+            (int(options.delrange) < 0 and (0-int(options.delrange)) <= low_note)):
          if options.verbose:
             print("Deleting range:", instrument.attrib)
          instruments.remove(instrument)
          continue
+
+      # modify to limit high/low note range
+      if (int(options.delrange) > 0 and int(options.delrange) >= low_note):
+         if options.verbose:
+            print("Limiting LowNote:", instrument.attrib, options.delrange)
+         for low_note in instrument.iter("LowNote"):
+            low_note.text = str(int(options.delrange)+1)
+      if (int(options.delrange) < 0 and (0-int(options.delrange)) <= high_note):
+         if options.verbose:
+            print("Limiting HighNote:", instrument.attrib, options.delrange)
+         for high_note in instrument.iter("HighNote"):
+            high_note.text = str(1-int(options.delrange))
 
    # have to re-write instrument numbers as one (or more)
    # may have been deleted
