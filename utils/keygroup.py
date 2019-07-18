@@ -13,27 +13,33 @@ from optparse import OptionParser
 usage = "usage: %prog [options] FILENAME"
 parser = OptionParser(usage)
 
+parser.add_option("-v", "--verbose",
+    action="store_true", dest="verbose")
+
 parser.add_option("-O", "--same", dest="samefile",
     action="store_true", help="write data to same file")
 parser.add_option("-o", "--output", dest="outfile",
     help="write data instead to OUTFILE")
-parser.add_option("-v", "--verbose",
-    action="store_true", dest="verbose")
 
 parser.add_option("-n", "--name", dest="name",
     help="change name of the keygroup")
+parser.add_option("-m", "--merge", dest="merge",
+    help="merge in the samples from a second keygroup file")
 
 parser.add_option("-d", "--delete", dest="delete",
     help="delete a specific instrument")
-
 parser.add_option("-D", "--delrange", dest="delrange",
     help="delete a range of instruments (positive=up-to, negative=up-from)")
 
 parser.add_option("-s", "--semi", dest="semi",
-    help="change position of notes by number of SEMI-tones (positive or negative)")
+    help="change tuning of instruments by number of SEMI-tones (positive or negative)")
+parser.add_option("-S", "--semisamp", dest="semisamp",
+    help="change tuning of samples by number of SEMI-tones (positive or negative)")
+parser.add_option("-M", "--move", dest="movekeys",
+    action="store_true", help="move keys by same number of semitones")
 
-parser.add_option("-m", "--merge", dest="merge",
-    help="merge in the samples from a second keygroup file")
+parser.add_option("-k", "--keyspan", dest="keyspan",
+    help="limit the keyspan of instruments by number of SEMI-tones (positive or negative)")
 
 (options, args) = parser.parse_args()
 
@@ -121,29 +127,53 @@ for instrument in list(instruments.iter("Instrument")):
    instrument.attrib['number'] = str(last_inst)
 
    ignore_base_note = False
+   root_note = False
    if instrument.find("IgnoreBaseNote").text == "True":
-         ignore_base_note = True
+      ignore_base_note = True
+
    tune_coarse = instrument.find("TuneCoarse")
    if options.semi and (not ignore_base_note):
-      if options.verbose:
-         print("adjusting tune:", tune_coarse.text)
       tune_coarse.text = str(int(tune_coarse.text) - int(options.semi))
+      if options.verbose:
+         print("adjusting instrument tune:", tune_coarse.text)
 
+   for layers in instrument.iter("Layers"):
+      for layer in layers.iter("Layer"):
+         tune_coarse = layer.find("TuneCoarse")
+         sample_name = layer.find("SampleName")
+         if sample_name.text:
+            root_note = int(layer.find("RootNote").text)
+            if options.semisamp and (not ignore_base_note):
+               tune_coarse.text = str(int(tune_coarse.text) - int(options.semisamp))
+               if options.verbose:
+                  print("adjusting sample tune:", tune_coarse.text)
 
+   semi_adjust = 0
+   if options.movekeys and options.semi and (not ignore_base_note):
+      semi_adjust = semi_adjust + int(options.semi)
+   if options.movekeys and options.semisamp and (not ignore_base_note):
+      semi_adjust = semi_adjust + int(options.semisamp)
+
+   if options.verbose:
+      print("Root Note:", root_note)
    for high_note in instrument.iter("HighNote"):
+      if options.semi or options.semisamp:
+         high_note.text = str(int(high_note.text) + semi_adjust)
+      if options.keyspan and int(options.keyspan) > -1:
+         high_note.text = str(root_note + int(options.keyspan))
       if options.verbose:
          print("High Note:", high_note.text)
-      if options.semi:
-         high_note.text = str(int(high_note.text) + int(options.semi))
 
       if int(high_note.text) > highest:
          highest = int(high_note.text)
 
    for low_note in instrument.iter("LowNote"):
+      if options.semi or options.semisamp:
+         low_note.text = str(int(low_note.text) + semi_adjust)
+      if options.keyspan and int(options.keyspan) < 1:
+         low_note.text = str(root_note + int(options.keyspan))
       if options.verbose:
          print("Low Note:", low_note.text)
-      if options.semi:
-         low_note.text = str(int(low_note.text) + int(options.semi))
 
       if int(low_note.text) < lowest:
          lowest = int(low_note.text)
