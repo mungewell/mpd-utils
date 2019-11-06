@@ -44,7 +44,7 @@ Header = Struct(
     Const(b"\xf0"),                 # SysEx Begin
     Const(b"\x47\x7f"),             # Mfg ID = Akai
     Const(b"\x75"),                 # Dev ID = LPD8
-    Const(b"\x63"),                 # CMD = Dump/Load Preset
+    Const(b"\x61"),                 # CMD = Dump/Load Preset
     Const(b"\x00\x3a"),             # Len = 13bytes (7bit stuffed)
 
     "preset" / Byte,
@@ -91,6 +91,40 @@ def edit_general():
 
     menu = qprompt.Menu()
 
+def edit_dial(dial):
+    global config
+
+    config[1][dial]['midicc'] = \
+        qprompt.ask_int("CC", vld=list(range(0,128)),
+            dft=config[1][dial]['midicc'])
+
+    config[1][dial]['max'] = \
+        qprompt.ask_int("Max", vld=list(range(0,128)),
+            dft=config[1][dial]['max'])
+
+    config[1][dial]['min'] = \
+        qprompt.ask_int("Min", vld=list(range(0,128)),
+            dft=config[1][dial]['min'])
+
+def edit_pad(pad):
+    global config
+
+    config[1][pad]['note'] = \
+        qprompt.ask_int("Note", vld=list(range(0,128)),
+            dft=config[1][pad]['note'])
+
+    menu = qprompt.Menu()
+    config[1][pad]['program'] = \
+        qprompt.ask_int("Program", vld=list(range(0,128)),
+            dft=config[1][pad]['program'])
+
+    config[1][pad]['midicc'] = \
+        qprompt.ask_int("CC", vld=list(range(0,128)),
+            dft=config[1][pad]['midicc'])
+
+    config[1][pad]['trigger'] = \
+        qprompt.ask_int("Trigger", vld=list(range(0,2)),
+            dft=config[1][pad]['trigger'])
 
 def main():
     global config
@@ -152,12 +186,12 @@ def main():
     if options.dump:
         print(config)
 
-    '''
     if options.dial:
         edit_dial(int(options.dial))
     if options.pad:
         edit_pad(int(options.pad))
 
+    '''
     if options.scale:
         edit_scale(int(options.scale), options.verbose)
     '''
