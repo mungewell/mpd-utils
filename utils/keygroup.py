@@ -16,10 +16,10 @@ parser = OptionParser(usage)
 parser.add_option("-v", "--verbose",
     action="store_true", dest="verbose")
 
-parser.add_option("-O", "--same", dest="samefile",
-    action="store_true", help="write data to same file")
 parser.add_option("-o", "--output", dest="outfile",
-    help="write data instead to OUTFILE")
+    help="write changes/data to OUTFILE")
+parser.add_option("-O", "--same", dest="samefile",
+    action="store_true", help="write changes/data to same/input file")
 
 parser.add_option("-n", "--name", dest="name",
     help="change name of the keygroup")
@@ -28,8 +28,10 @@ parser.add_option("-m", "--merge", dest="merge",
 
 parser.add_option("-d", "--delete", dest="delete",
     help="delete a specific instrument")
-parser.add_option("-D", "--delrange", dest="delrange",
-    help="delete a range of instruments (positive=up-to, negative=up-from)")
+parser.add_option("-D", "--delnotes", dest="delnotes",
+    help="delete a range of notes/instruments (positive=up-to-inc, negative=up-from-inc)")
+parser.add_option("-T", "--tidy", dest="tidy",
+    action="store_true", help="remove instruments which have no sample files specified")
 
 parser.add_option("-s", "--semi", dest="semi",
     help="change tuning of instruments by number of SEMI-tones (positive or negative)")
@@ -69,6 +71,7 @@ last_inst = 0
 # print out all the high and low notes for each instrument
 for instrument in list(instruments.iter("Instrument")):
    if options.verbose:
+      print("-")
       print(instrument.tag, instrument.attrib)
 
    inst_active = False
@@ -82,7 +85,7 @@ for instrument in list(instruments.iter("Instrument")):
 
    # ignore instruments which are not used
    if not inst_active:
-      if options.merge:
+      if options.merge or options.tidy:
          if options.verbose:
             print("Removing unused instrument:", instrument.attrib)
          instruments.remove(instrument)
@@ -95,31 +98,31 @@ for instrument in list(instruments.iter("Instrument")):
             print("Deleting instrument:", instrument.attrib)
          instruments.remove(instrument)
          continue
-   if options.delrange:
+   if options.delnotes:
       for note in instrument.iter("LowNote"):
          low_note = int(note.text)
       for note in instrument.iter("HighNote"):
          high_note = int(note.text)
 
       # delete outright
-      if ((int(options.delrange) > 0 and int(options.delrange) >= high_note) or
-            (int(options.delrange) < 0 and (0-int(options.delrange)) <= low_note)):
+      if ((int(options.delnotes) > 0 and int(options.delnotes) >= high_note) or
+            (int(options.delnotes) < 0 and (0-int(options.delnotes)) <= low_note)):
          if options.verbose:
-            print("Deleting range:", instrument.attrib)
+            print("Deleting instrument:", instrument.attrib)
          instruments.remove(instrument)
          continue
 
-      # modify to limit high/low note range
-      if (int(options.delrange) > 0 and int(options.delrange) >= low_note):
+      # modify to limit high/low note notes
+      if (int(options.delnotes) > 0 and int(options.delnotes) >= low_note):
          if options.verbose:
-            print("Limiting LowNote:", instrument.attrib, options.delrange)
+            print("Limiting LowNote:", instrument.attrib, options.delnotes)
          for low_note in instrument.iter("LowNote"):
-            low_note.text = str(int(options.delrange)+1)
-      if (int(options.delrange) < 0 and (0-int(options.delrange)) <= high_note):
+            low_note.text = str(int(options.delnotes)+1)
+      if (int(options.delnotes) < 0 and (0-int(options.delnotes)) <= high_note):
          if options.verbose:
-            print("Limiting HighNote:", instrument.attrib, options.delrange)
+            print("Limiting HighNote:", instrument.attrib, options.delnotes)
          for high_note in instrument.iter("HighNote"):
-            high_note.text = str(1-int(options.delrange))
+            high_note.text = str(1-int(options.delnotes))
 
    # have to re-write instrument numbers as one (or more)
    # may have been deleted
@@ -154,19 +157,6 @@ for instrument in list(instruments.iter("Instrument")):
    if options.movekeys and options.semisamp and (not ignore_base_note):
       semi_adjust = semi_adjust + int(options.semisamp)
 
-   if options.verbose:
-      print("Root Note:", root_note)
-   for high_note in instrument.iter("HighNote"):
-      if options.semi or options.semisamp:
-         high_note.text = str(int(high_note.text) + semi_adjust)
-      if options.keyspan and int(options.keyspan) > -1:
-         high_note.text = str(root_note + int(options.keyspan))
-      if options.verbose:
-         print("High Note:", high_note.text)
-
-      if int(high_note.text) > highest:
-         highest = int(high_note.text)
-
    for low_note in instrument.iter("LowNote"):
       if options.semi or options.semisamp:
          low_note.text = str(int(low_note.text) + semi_adjust)
@@ -178,7 +168,22 @@ for instrument in list(instruments.iter("Instrument")):
       if int(low_note.text) < lowest:
          lowest = int(low_note.text)
 
+   if options.verbose:
+      print("Root Note:", root_note)
+
+   for high_note in instrument.iter("HighNote"):
+      if options.semi or options.semisamp:
+         high_note.text = str(int(high_note.text) + semi_adjust)
+      if options.keyspan and int(options.keyspan) > -1:
+         high_note.text = str(root_note + int(options.keyspan))
+      if options.verbose:
+         print("High Note:", high_note.text)
+
+      if int(high_note.text) > highest:
+         highest = int(high_note.text)
+
 if options.verbose:
+    print("=")
     print("Lowest Note:", lowest)
     print("Highest Note:", highest)
     print("Last Instrument:", last_inst)
