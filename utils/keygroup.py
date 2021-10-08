@@ -42,6 +42,8 @@ parser.add_option("-M", "--move", dest="movekeys",
 
 parser.add_option("-k", "--keyspan", dest="keyspan",
     help="limit the keyspan of instruments by number of SEMI-tones (positive or negative)")
+parser.add_option("-K", "--keyfill", dest="keyfill",
+    action="store_true", help="automatically set keyspan to fill gaps between instruments")
 
 (options, args) = parser.parse_args()
 
@@ -64,6 +66,7 @@ if options.name:
    name = program.find("ProgramName")
    name.text = options.name
 
+root_notes = []
 lowest = 128
 highest = 0
 last_inst = 0
@@ -168,6 +171,7 @@ for instrument in list(instruments.iter("Instrument")):
       if int(low_note.text) < lowest:
          lowest = int(low_note.text)
 
+   root_notes.append([root_note])
    if options.verbose:
       print("Root Note:", root_note)
 
@@ -187,8 +191,6 @@ if options.verbose:
     print("Lowest Note:", lowest)
     print("Highest Note:", highest)
     print("Last Instrument:", last_inst)
-
-
 
 # --------
 # Merge in the instruments from a second keygroup file
@@ -224,12 +226,53 @@ if options.merge:
 
       instrument.attrib['number'] = str(last_inst)
 
+      # find root note
+      for layers in instrument.iter("Layers"):
+         for layer in layers.iter("Layer"):
+            tune_coarse = layer.find("TuneCoarse")
+            sample_name = layer.find("SampleName")
+            if sample_name.text:
+               root_notes.append([int(layer.find("RootNote").text)])
+
       # this is the original XML tree
       instruments.append(instrument)
 
 # Correct the number of keygroups
 keygroups = program.find("KeygroupNumKeygroups")
 keygroups.text = str(last_inst)
+
+#----
+if options.keyfill:
+   root_notes.sort(key=lambda x:x[0])
+
+   # recompute low/high notes
+   low = 0
+   for i in range(len(root_notes)):
+      if i:
+         low = root_notes[i-1][2] + 1
+
+      if i == len(root_notes) - 1:
+         high = 127
+      else:
+         high = root_notes[i+1][0] - 1
+
+      root_notes[i].append(low)
+      root_notes[i].append(high)
+
+   # need to re-scan to change low/high notes
+   for instrument in list(instruments.iter("Instrument")):
+      for layers in instrument.iter("Layers"):
+         for layer in layers.iter("Layer"):
+            sample_name = layer.find("SampleName")
+            if sample_name.text:
+               root_note = int(layer.find("RootNote").text)
+
+               for new_keys in root_notes:
+                  if new_keys[0] == root_note:
+                     for low_note in instrument.iter("LowNote"):
+                        low_note.text = str(new_keys[1])
+                     for high_note in instrument.iter("HighNote"):
+                        high_note.text = str(new_keys[2])
 
 # ---------------------
 # write out the changes
