@@ -134,7 +134,8 @@ for instrument in list(instruments.iter("Instrument")):
 
    ignore_base_note = False
    root_note = False
-   if instrument.find("IgnoreBaseNote").text == "True":
+   if instrument.find("IgnoreBaseNote") and \
+           instrument.find("IgnoreBaseNote").text == "True":
       ignore_base_note = True
 
    tune_coarse = instrument.find("TuneCoarse")
