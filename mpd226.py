@@ -71,7 +71,7 @@ Header = Struct(
         ((obj_ & 0x7f) + ((obj_ & 0x7f00) >> 1)),
         ((obj_ & 0x7f) + ((obj_ & 0x3f80) << 1)),
         ),
-    "noterepeatswitch" / Enum(Byte,
+    "timedivisionswitch" / Enum(Byte,
         MOMENTARY = 0,
         TOGGLE = 1,
         ),
@@ -85,7 +85,7 @@ Header = Struct(
         DIV_1_32  = 6,
         DIV_1_32T = 7,
         ),
-    "timedivisionswitch" / Enum(Byte,
+    "noterepeatswitch" / Enum(Byte,
         MOMENTARY = 0,
         TOGGLE = 1,
         ),
@@ -195,25 +195,38 @@ Switch = Struct(
         NOTE = 1,
         PROGRAM = 2,
         BANK = 3,
-        KEY = 3,
+        KEY = 4,
         ),
     "channel" / Byte,               # 0 = Common, A1..16, B1..16
-    "midicc" /Byte,                 # CC and ID2 only
-    "min" /Byte,                    # CC and AT only
-    "max" /Byte,                    # CC and AT only
-    "msb" / Byte,                   # ID1 only
-    "lsb" /Byte,                    # ID1 only
-    "value" / Byte,                 # ID1 only
+                                    # all but KEYSTROKE
+    "midicc" /Byte,                 # CC
+    "mode" / Enum(Byte,             # CC 
+        MOMENTARY = 0,
+        TOGGLE = 1,
+        ),
+    "prog" /Byte,                   # PROGRAM/BANK
+    "msb" / Byte,                   # BANK
+    "lsb" / Byte,                   # BANK
 
-    "program" / Byte,               # PROG only
-    "msb" / Byte,                   # BANK only
-    "lsb" /Byte,                    # BANK only
-
-    "key" /Byte,
-
-    "midi2din" / Enum(Byte,
+    "midi2din" / Enum(Byte,         # all but KEYSTROKE
         OFF = 0,
         ON  = 1,
+        ),
+
+    "note" / Byte,                  # NOTE
+    "velo" / Byte,                  # NOTE
+
+    "invert" / Enum(Byte,           # CC
+        OFF = 0,
+        ON  = 1,
+        ),
+
+    "key1" /Byte,                   # KEYSTROKE
+    "key2" / Enum(Byte,             # KEYSTROKE
+        NONE = 0, CTRL = 1, SHIFT = 2, ALT = 3, OPT = 4,
+        CTRL_SHIFT = 5, CTRL_ALT = 6, CTRL_OPT = 7,
+        SHIFT_ALT = 8, SHIFT_OPT = 9, ALT_OPT = 10,
+        CTRL_ALT_OP = 11, CTRL_SH_ALT = 12, CTRL_SH_OPT = 13
         ),
 )
 
