@@ -163,14 +163,15 @@ Dial = Struct(
     "midicc" /Byte,                 # CC and ID2 only
     "min" /Byte,                    # CC and AT only
     "max" /Byte,                    # CC and AT only
-    "msb" / Byte,                   # ID1 only
-    "lsb" /Byte,                    # ID1 only
-    "value" / Byte,                 # ID1 only
 
     "midi2din" / Enum(Byte,
         OFF = 0,
         ON  = 1,
         ),
+
+    "msb" /Byte,                    # ID1 only
+    "lsb" / Byte,                   # ID1 only
+    "value" / Byte,                 # ID1 only
 )
 
 Fader = Struct(
@@ -179,9 +180,9 @@ Fader = Struct(
         AFTERTOUCH = 1,
         ),
     "channel" / Byte,               # 0 = Common, A1..16, B1..16
-    "midicc" /Byte,                 # CC and ID2 only
-    "min" /Byte,                    # CC and AT only
-    "max" /Byte,                    # CC and AT only
+    "midicc" /Byte,                 # CC only
+    "min" /Byte,                    # CC/AFTERTOUCH
+    "max" /Byte,                    # CC/AFTERTOUCH
 
     "midi2din" / Enum(Byte,
         OFF = 0,
