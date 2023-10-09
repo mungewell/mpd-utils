@@ -67,3 +67,21 @@ produces continuous note on/off events
 $ amidi -p hw:1,0,0 -S 'f0 47 00 37 5a 00 02 00 01 f7'
 --
 
+cause screen backlight to flash on (just once, after power on)
+--
+$ amidi -p hw:1,0,0 -S 'f0 47 00 37 64 00 03 00 01 02 f7' 
+--
+
+Turn display off
+--
+$ amidi -p hw:2,0,0 -S 'f0 47 00 37 64 00 03 00 01 00 f7'
+--
+
+Turn display on
+--
+$ amidi -p hw:2,0,0 -S 'f0 47 00 37 64 00 03 00 01 01 f7'
+--
+
+
+
+$ amidi -p hw:2,0,0 -S 'f0 47 00 37 5a 00 20 00 00 07 08 00 01 00 00 00 00 00 01 02 00 00 00 00 00 00 00 04 00 00 00 00 00 00 04 00 00 00 00 f7'

@@ -12,6 +12,8 @@ The 1st of the Midi devices ('Public' in Windows, 'MPC Touch MIDI 1' in
 Linux)  will send Note/CC packets (for all buttons and dials), and it also
 responds to SysEx commands/requests.
 
+Strangely the 'Private' Midi interface is not listed in Windows
+
 Note: once connected to MPC software in Windows, none of the Midi ports are
 connected or sending button presses - suggesting that comms to MPC software
 is happening via the USB HID port.

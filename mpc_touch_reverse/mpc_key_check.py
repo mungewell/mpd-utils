@@ -32,11 +32,11 @@ import mido
 print("MPC Key Check")
 inport = None
 
-mido.set_backend('mido.backends.rtmidi_python')
+#mido.set_backend('mido.backends.rtmidi_python')
 print(mido.get_input_names())
 
 for port in mido.get_input_names():
-  if port[:6]==b'Public':
+  if port[:26]=='MPC Touch:MPC Touch MIDI 1':
     inport = port
     print("Using:", inport)
     break
