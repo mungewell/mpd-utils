@@ -138,8 +138,18 @@ Pad = Struct(
     "msb" / Byte,                   # BANK only
     "lsb" /Byte,                    # BANK only
 
-    "offcolor" /Byte,
-    "oncolor" /Byte,
+    "offcolor" / Enum(Byte,
+        OFF = 0, RED = 1, ORANGE = 2, AMBER = 3, YELLOW = 4,
+        GREEN = 5, GREENBLUE = 6, AQUA = 7, LTBLUE = 8,
+        BLUE = 9, PURPLE = 10, PINK = 11, HOTPINK = 12,
+        LTPURPLE = 13, LTGREEN = 14, LTPINK = 15, GREY = 16
+        ),
+    "oncolor" / Enum(Byte,
+        OFF = 0, RED = 1, ORANGE = 2, AMBER = 3, YELLOW = 4,
+        GREEN = 5, GREENBLUE = 6, AQUA = 7, LTBLUE = 8,
+        BLUE = 9, PURPLE = 10, PINK = 11, HOTPINK = 12,
+        LTPURPLE = 13, LTGREEN = 14, LTPINK = 15, GREY = 16
+        ),
 )
 
 Dial = Struct(
