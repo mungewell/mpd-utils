@@ -188,5 +188,11 @@ https://github.com/gljubojevic/akai-mpk-mini-editor
 It looks like several other Akai devices follow similar schemes, in
 particular the MPD226, MPK-Mini (see above)  and MPK2. 
 
+I got my hands on a MPD266, the preset structure is almost correct. You can
+read presets from the device with (00 - current, 01-14 presets).
+```
+# amidi -p hw:1,0,3 -t 1 -S 'F0 47 00 35 12 00 01 00 F7' -r test.syx
+```
+
 Raise a bug if you'de like to see a similar script for your device...
 

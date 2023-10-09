@@ -89,6 +89,7 @@ Header = Struct(
         MOMENTARY = 0,
         TOGGLE = 1,
         ),
+    "gate" /Byte,
     "swing" / Enum(Byte,            # This could be byte value
         SWING_OFF = 50,
         SWING_54  = 54,
@@ -97,7 +98,6 @@ Header = Struct(
         SWING_60  = 60,
         SWING_62  = 62,
         ),
-    "gate" /Byte,
 
     "un5" /Byte,
     "un6" /Byte,
@@ -121,6 +121,10 @@ Pad = Struct(
         ),
     "channel" / Byte,
     "note" /Byte,                   # NOTE only
+    "midi2din" / Enum(Byte,
+        OFF = 0,
+        ON  = 1,
+        ),
     "trigger" / Enum(Byte,          # NOTE only
         MOMENTARY = 0,
         TOGGLE = 1,
@@ -134,12 +138,8 @@ Pad = Struct(
     "msb" / Byte,                   # BANK only
     "lsb" /Byte,                    # BANK only
 
-    "midi2din" / Enum(Byte,
-        OFF = 0,
-        ON  = 1,
-        ),
-    "oncolor" /Byte,
     "offcolor" /Byte,
+    "oncolor" /Byte,
 )
 
 Dial = Struct(
@@ -481,17 +481,19 @@ def main():
     if options.name:
         config[0]['name'] = (options.name + (" "*8))[:8]
 
-    if options.division:
-        edit_division()
-    if options.swing:
-        edit_swing()
-    if options.dial:
-        edit_dial(int(options.dial))
-    if options.pad:
-        edit_pad(int(options.pad))
+    if _hasQPrompt:
+        if options.division:
+            edit_division()
+        if options.swing:
+            edit_swing()
+        if options.dial:
+            edit_dial(int(options.dial))
+        if options.pad:
+            edit_pad(int(options.pad))
 
-    if options.scale:
-        edit_scale(int(options.scale), options.verbose)
+        if _hasME:
+            if options.scale:
+                edit_scale(int(options.scale), options.verbose)
 
 
     if options.dump:
