@@ -231,19 +231,8 @@ Switch = Struct(
         ),
 )
 
-Global = Struct(
-    "un1" /Byte,
-    "un2" /Byte,
-    "un3" /Byte,
-    "un4" /Byte,
-    "un5" /Byte,
-    "un6" /Byte,
-    "un7" /Byte,
-    "un8" /Byte,
-    "un9" /Byte,
-    "unA" /Byte,
-    "unB" /Byte,
-    "unC" /Byte,
+Unknown = Struct(
+    "unknown" /Bytes(12),
 )
 
 Footer = Struct(
@@ -256,7 +245,7 @@ Mpd226 = Sequence(
     Array(_DBANKS, Array(_DIALS, Dial,)),
     Array(_FBANKS, Array(_FADERS, Fader,)),
     Array(_SBANKS, Array(_SWITCHES, Switch,)),
-    Global,
+    Unknown,
     Footer,
 )
 
@@ -529,6 +518,7 @@ def main():
         else:
             print("writing %s..." % args[0])
 
+    '''
     if options.outfile:
         outfile = open(options.outfile, "wb")
     else:
@@ -538,6 +528,7 @@ def main():
         print("Unable to open output file")
     else:
         outfile.write(Mpd226.build(config))
+    '''
 
 if __name__ == "__main__":
     main()
