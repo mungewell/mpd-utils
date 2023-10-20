@@ -1,0 +1,32 @@
+
+
+Read, write, read 'Clock source'... set external, LED stops flashing.
+```
+$ amidi -p hw:2,0,3 -S 'F0 47 00 35 20 00 03 01 00 07 F7' -r test.bin ; hexdump -C test.bin
+^C
+12 bytes read
+00000000  f0 47 00 35 30 00 04 01  00 07 00 f7              |.G.50.......|
+0000000c
+$ amidi -p hw:2,0,3 -S 'F0 47 00 35 30 00 04 01 00 07 01 F7' -r test.bin ; hexdump -C test.bin
+^C
+12 bytes read
+00000000  f0 47 00 35 38 00 04 01  00 07 00 f7              |.G.58.......|
+0000000c
+$ amidi -p hw:2,0,3 -S 'F0 47 00 35 20 00 03 01 00 07 F7' -r test.bin ; hexdump -C test.bin
+^C
+12 bytes read
+00000000  f0 47 00 35 30 00 04 01  00 07 01 f7              |.G.50.......|
+0000000c
+```
+
+
+0,01 = Mode, 0 = Normal, 1 = Demo
+0,02 = Preset number
+0,03 = Common Ch. 0=A1
+0,04 = Constrast 
+0,05 = Tap Tempo, count - 1
+0,06 = Tempo LED, 0 = off, 1 = on
+0,07 = Clock Source, 0 = internal, 1 = external
+0,09 = Threshold
+0,0A = 
+0,0B = Pad Curve. Linear, S-curve, Log1, Log2, Exp1, Exp2
