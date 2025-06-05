@@ -2,6 +2,8 @@
 
 Scripts for configuring the Akai MPD218 Midi Pad Controller
 
+## Context
+
 The MPD218 is a small/low-cost MIDI pad controller, with touch sensitive
 pads and dials. It can be used (with a PC/Laptop) as a drum machine or
 a controller for a Digital Audio Workshop.
@@ -11,6 +13,14 @@ The configuration file is a propriatory format and specific to the MPD218.
 'mpd218.py' is a command line application which can decode/encode the
 configuration files. It may be possible to adjust/tailor the script
 for other Akai devices.
+
+## General Workflow
+
+- Copy an example config file to a file that you will modify for your own use.
+- Use the scripts to edit your config file.
+- Send your config file to the device with `amidi` or any SysEx emiter you have.
+
+## Usage
 
 Requires 'construct' (v2.9):
 https://github.com/construct/construct
