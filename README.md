@@ -38,6 +38,9 @@ Options:
   -S, --swing           Interactively change the Swing
   -D DIAL, --dial=DIAL  Interactively configure a Dial
   -P PAD, --pad=PAD     Interactively configure a Pad
+                        bank A from 1 to 16
+                        bank B from 17 to 32
+                        bank C from 33 to 48
   -M SCALE, --scale=SCALE
                         Interactively configure multiple Pads as a scale
 ```
