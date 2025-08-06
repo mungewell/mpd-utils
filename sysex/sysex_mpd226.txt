@@ -30,3 +30,11 @@ $ amidi -p hw:2,0,3 -S 'F0 47 00 35 20 00 03 01 00 07 F7' -r test.bin ; hexdump 
 0,09 = Threshold
 0,0A = 
 0,0B = Pad Curve. Linear, S-curve, Log1, Log2, Exp1, Exp2
+
+
+
+Program memory can be changed as well...
+
+
+for example off colour of bank B - pad 15...
+$ amidi -p hw:2,0,3 -S 'F0 47 00 35 31 00 04 01 07 40 0a F7'

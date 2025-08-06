@@ -5,6 +5,10 @@
 #
 
 from optparse import OptionParser
+
+# Requires Construct 2.9.x
+# https://github.com/construct/construct
+
 from construct import *
 
 #--------------------------------------------------
@@ -535,6 +539,9 @@ def main():
         help="change the profile number to PRESET" )
     parser.add_option("-t", "--tempo", dest="tempo",
         help="change the tempo to TEMPO" )
+    parser.add_option("-c", "--clock",
+        help="toggle Arp Clock between 'INTERNAL' and 'EXTERNAL'",
+        action="store_true", dest="clock")
 
     if _hasQPrompt:
         parser.add_option("-A", "--arpeggio",
@@ -603,6 +610,11 @@ def main():
         config[0]['preset'] = int(options.preset)
     if options.tempo:
         config[0]['tempo'] = int(options.tempo)
+    if options.clock:
+        if config[0]['clock'] == 'INTERNAL':
+            config[0]['clock'] = 'EXTERNAL'
+        else:
+            config[0]['clock'] = 'INTERNAL'
 
     if options.arpeggio:
         edit_arpeggio()
